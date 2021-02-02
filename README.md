@@ -9,3 +9,6 @@ Please note that I've fully re-coded it and I'm its copyright holder.
 
 
 WIP
+
+
+registerOrb(Factory, Category, Identifier)

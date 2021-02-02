@@ -1,30 +1,56 @@
 package com.andrei1058.handyorbs.core;
 
-import org.bukkit.Location;
+import com.andrei1058.handyorbs.core.region.IRegion;
+import com.andrei1058.handyorbs.core.version.OrbEntity;
+import com.andrei1058.handyorbs.core.version.OrbEntityFactory;
+import org.bukkit.*;
+import org.bukkit.inventory.ItemStack;
 
-public class OrbBase {
+import java.util.UUID;
 
-    private Location location;
+public abstract class OrbBase {
 
-    protected OrbBase(Location location){
-        this.location = location;
+    private int orbId = -1;
+    private String world;
+    private IRegion region;
+    private OrbEntity orbEntity;
+
+    protected OrbBase(Location location, IRegion region) {
+        this.world = location.getWorld() == null ? "null" : location.getWorld().getName();
+        this.region = region;
+        World world = Bukkit.getWorld(this.world);
+        if (world == null) throw new IllegalStateException("World is not loaded!");
+        orbEntity = OrbEntityFactory.getInstance().spawnOrbEntity(new Location(world, location.getX(), location.getY(), location.getZ()), new ItemStack(Material.GOLD_BLOCK));
+        if (orbEntity == null) throw new IllegalStateException("Could not spawn orb entity!");
+
+        orbEntity.setDisplayName("&x&F&E&D&B&F&0My &x&C&B&A&F&C&0Nice &x&5&1&4&6&4&COrb");
+        orbEntity.setRightClickListener((player -> {
+            player.sendMessage("right click " + (player.isSneaking() ? "(shifting)" : ""));
+            return null;
+        }));
     }
 
-    public boolean load(){
-        return false;
-    }
-
-    public void unLoad(){
+    public void unLoad() {
 
     }
 
-    public void changeLocation(Location newLocation){
-        this.location = newLocation;
-        // todo teleport orb
+    public int getOrbId() {
+        return orbId;
     }
 
-    protected void tickAnimation(){
-
+    public OrbEntity getOrbEntity() {
+        return orbEntity;
     }
 
+    public String getWorld() {
+        return world;
+    }
+
+    public String getDisplayName(){
+        return orbEntity.getName();
+    }
+
+    public void setOrbId(int orbId) {
+        this.orbId = orbId;
+    }
 }

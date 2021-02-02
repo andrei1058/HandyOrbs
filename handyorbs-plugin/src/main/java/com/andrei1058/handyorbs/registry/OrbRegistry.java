@@ -1,0 +1,120 @@
+package com.andrei1058.handyorbs.registry;
+
+import com.andrei1058.handyorbs.api.OrbCategory;
+import com.andrei1058.handyorbs.core.OrbBase;
+import com.andrei1058.handyorbs.core.model.WheatOrb;
+import com.andrei1058.handyorbs.core.region.Cuboid;
+import com.andrei1058.handyorbs.core.region.IRegion;
+import org.bukkit.Location;
+import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class OrbRegistry {
+    private static OrbRegistry instance;
+
+    private final HashMap<OrbCategory, OrbCategoryRegistry> orbTypeRegistry = new HashMap<>();
+
+    private OrbRegistry() {
+        //register categories
+        for (OrbCategory category : OrbCategory.values()) {
+            orbTypeRegistry.put(category, new OrbCategoryRegistry());
+        }
+        // register default orbs
+        //todo check for disabled orbs
+        OrbCategoryRegistry farmingRegistry = getCategoryRegistry(OrbCategory.FARMING);
+        if (farmingRegistry != null) {
+            farmingRegistry.addOrb("wheat", WheatOrb.class);
+        }
+    }
+
+    /**
+     * Init registry on plugin load.
+     */
+    public static void init() {
+        if (instance == null) {
+            instance = new OrbRegistry();
+        }
+    }
+
+    /**
+     * Get registry.
+     */
+    public static OrbRegistry getInstance() {
+        return instance;
+    }
+
+    /**
+     * Get registry by category.
+     */
+    public OrbCategoryRegistry getCategoryRegistry(OrbCategory category) {
+        return orbTypeRegistry.get(category);
+    }
+
+    /**
+     * Register a new orb type.
+     *
+     * @param identifier orb identifier.
+     * @param orb        orb class.
+     * @param category   orb category.
+     */
+    public boolean registerOrb(String identifier, Class<? extends OrbBase> orb, OrbCategory category) {
+        if (identifier.length() > 20) {
+            throw new IllegalArgumentException("Identifier cannot be bigger than 20");
+        }
+        OrbCategoryRegistry subRegistry = getCategoryRegistry(category);
+        return subRegistry != null && subRegistry.addOrb(identifier, orb);
+    }
+
+    @Nullable
+    public OrbBase spawnOrb(String identifier, OrbCategory category, Location location, int radius) {
+        OrbCategoryRegistry subRegistry = getCategoryRegistry(category);
+        if (subRegistry == null) return null;
+        Class<? extends OrbBase> orb = subRegistry.getOrb(identifier);
+        if (orb == null) return null;
+        try {
+            Constructor<?> constructor = orb.getConstructor(Location.class, IRegion.class);
+            OrbBase orbInstance = (OrbBase) constructor.newInstance(location, new Cuboid(radius, location));
+            //subRegistry.addActiveOrb(orbInstance.getOrbId(), orbInstance);
+            return orbInstance;
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Nullable
+    public OrbBase getActiveOrbById(int orbId) {
+        for (OrbCategoryRegistry category : orbTypeRegistry.values()) {
+            OrbBase orb = category.getActiveOrb(orbId);
+            if (orb != null) {
+                return orb;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public OrbCategory getActiveOrbCategory(int orbId) {
+        for (Map.Entry<OrbCategory, OrbCategoryRegistry> entry : orbTypeRegistry.entrySet()) {
+            if (entry.getValue().getActiveOrb(orbId) != null) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public String getActiveOrbIdentifier(OrbBase orbBase) {
+        for (OrbCategoryRegistry category : orbTypeRegistry.values()) {
+            String orb = category.getActiveOrbType(orbBase);
+            if (orb != null) {
+                return orb;
+            }
+        }
+        return null;
+    }
+}
