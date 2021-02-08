@@ -1,5 +1,6 @@
 package com.andrei1058.handyorbs.database;
 
+import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -46,7 +47,9 @@ public class OrbRepository {
         List<OrbEntity> chunkOrbs;
 
         try {
-            chunkOrbs = orbDao.queryBuilder().where().eq("chunkX", x).and().eq("chunkZ", z).and().eq("world", world).query();
+            chunkOrbs = orbDao.queryBuilder().where().eq("chunkX", x)
+                    .and().eq("chunkZ", z)
+                    .and().eq("world", world).query();
         } catch (SQLException ex) {
             ex.printStackTrace();
             chunkOrbs = Collections.emptyList();
@@ -54,9 +57,11 @@ public class OrbRepository {
         return chunkOrbs;
     }
 
-    public void saveUpdate(@NotNull OrbBase orbBase) {
+    public void saveUpdate(@NotNull OrbBase orbBase, OrbCategory category) {
         try {
-            orbDao.createOrUpdate(new OrbEntity(orbBase));
+            OrbEntity orb = new OrbEntity(orbBase, category);
+            orbDao.createOrUpdate(orb);
+            orbBase.setOrbId(orb.getOrbId());
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

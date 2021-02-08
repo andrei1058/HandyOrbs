@@ -1,17 +1,21 @@
 package com.andrei1058.handyorbs.registry;
 
 import com.andrei1058.handyorbs.core.OrbBase;
+import com.google.common.annotations.Beta;
+import net.minecraft.server.v1_16_R3.*;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.WeakHashMap;
+import java.util.*;
 
-class OrbCategoryRegistry {
+public class OrbCategoryRegistry {
 
     private final HashMap<String, Class<? extends OrbBase>> orbsByIdentifier = new HashMap<>();
-    private final Map<Integer, OrbBase> activeOrbsById = new TreeMap<>();
+    private final Map<Integer, OrbBase> activeOrbsById = new HashMap<>();
 
     public boolean addOrb(String identifier, Class<? extends OrbBase> orb) {
         if (orbsByIdentifier.containsKey(identifier)) {
@@ -74,5 +78,22 @@ class OrbCategoryRegistry {
             }
         }
         return null;
+    }
+
+    @Beta
+    public int removeInstancesAtChunk(String world, int x, int z) {
+        List<Integer> toRemove = new ArrayList<>();
+        for (Map.Entry<Integer, OrbBase> entry : activeOrbsById.entrySet()) {
+            if (entry.getValue().getWorld().equals(world)) {
+                if (entry.getValue().getOrbEntity().getChunkX() == x && entry.getValue().getOrbEntity().getChunkZ() == z) {
+                    toRemove.add(entry.getKey());
+                    Bukkit.broadcastMessage("Removed entity with id: " + entry.getKey());
+                }
+            }
+        }
+
+        int size = toRemove.size();
+        toRemove.forEach(activeOrbsById::remove);
+        return size;
     }
 }

@@ -1,12 +1,11 @@
 package com.andrei1058.handyorbs.core;
 
+import com.andrei1058.handyorbs.core.model.Ownable;
 import com.andrei1058.handyorbs.core.region.IRegion;
 import com.andrei1058.handyorbs.core.version.OrbEntity;
 import com.andrei1058.handyorbs.core.version.OrbEntityFactory;
 import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.UUID;
 
 public abstract class OrbBase {
 
@@ -26,6 +25,11 @@ public abstract class OrbBase {
         orbEntity.setDisplayName("&x&F&E&D&B&F&0My &x&C&B&A&F&C&0Nice &x&5&1&4&6&4&COrb");
         orbEntity.setRightClickListener((player -> {
             player.sendMessage("right click " + (player.isSneaking() ? "(shifting)" : ""));
+            player.sendMessage("World: " + this.world);
+            player.sendMessage("ID: " + orbId);
+            if (this instanceof Ownable) {
+                player.sendMessage("Owner: " + ((Ownable) this).getOwner());
+            }
             return null;
         }));
     }
@@ -46,7 +50,7 @@ public abstract class OrbBase {
         return world;
     }
 
-    public String getDisplayName(){
+    public String getDisplayName() {
         return orbEntity.getName();
     }
 

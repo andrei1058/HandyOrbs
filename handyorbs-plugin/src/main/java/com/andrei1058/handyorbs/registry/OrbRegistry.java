@@ -5,6 +5,7 @@ import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.WheatOrb;
 import com.andrei1058.handyorbs.core.region.Cuboid;
 import com.andrei1058.handyorbs.core.region.IRegion;
+import com.google.common.annotations.Beta;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,6 +70,9 @@ public class OrbRegistry {
         return subRegistry != null && subRegistry.addOrb(identifier, orb);
     }
 
+    /**
+     * Spawn a new orb and save it to the database.
+     */
     @Nullable
     public OrbBase spawnOrb(String identifier, OrbCategory category, Location location, int radius) {
         OrbCategoryRegistry subRegistry = getCategoryRegistry(category);
@@ -77,9 +81,7 @@ public class OrbRegistry {
         if (orb == null) return null;
         try {
             Constructor<?> constructor = orb.getConstructor(Location.class, IRegion.class);
-            OrbBase orbInstance = (OrbBase) constructor.newInstance(location, new Cuboid(radius, location));
-            //subRegistry.addActiveOrb(orbInstance.getOrbId(), orbInstance);
-            return orbInstance;
+            return (OrbBase) constructor.newInstance(location, new Cuboid(radius, location));
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -116,5 +118,14 @@ public class OrbRegistry {
             }
         }
         return null;
+    }
+
+    @Beta
+    public int removeInstancesAtChunk(String world, int x, int z) {
+        int removed = 0;
+        for (OrbCategoryRegistry category : orbTypeRegistry.values()) {
+            removed += category.removeInstancesAtChunk(world, x, z);
+        }
+        return removed;
     }
 }

@@ -39,32 +39,33 @@ public class OrbEntity {
     @DatabaseField(useGetSet = true)
     private String world;
 
-    public OrbEntity(){
+    public OrbEntity() {
         // ORM Constructor
     }
 
-    public OrbEntity(OrbBase orbBase) {
+    public OrbEntity(OrbBase orbBase, @Nullable OrbCategory category) {
         this.locX = (int) orbBase.getOrbEntity().getLocX();
         this.locY = (int) orbBase.getOrbEntity().getLocY();
         this.locZ = (int) orbBase.getOrbEntity().getLocZ();
         this.world = orbBase.getWorld();
 
 
-        OrbCategory orbCategory = OrbRegistry.getInstance().getActiveOrbCategory(orbBase.getOrbId());
+        OrbCategory orbCategory = category == null ? OrbRegistry.getInstance().getActiveOrbCategory(orbBase.getOrbId()) : category;
         if (orbCategory == null) {
-            //todo only for testing purposes, to remove
-            orbCategory = OrbCategory.FARMING;
+            throw new IllegalStateException("Given orb does not have a valid category!");
         }
         String orbIdentifier = OrbRegistry.getInstance().getActiveOrbIdentifier(orbBase);
         if (orbIdentifier == null) {
-            //todo only for testing purposes, to remove
-            orbIdentifier = "wheat";
+            throw new IllegalStateException("Given orb does not have a valid type!");
         }
         this.category = orbCategory.name();
         this.type = orbIdentifier;
         this.owner = orbBase instanceof Ownable ? ((Ownable) orbBase).getOwner() : null;
         this.displayName = orbBase.getDisplayName();
         this.nameStatus = orbBase.getOrbEntity().getCustomNameVisible();
+
+        this.chunkX = orbBase.getOrbEntity().getChunkX();
+        this.chunkZ = orbBase.getOrbEntity().getChunkZ();
     }
 
     public int getOrbId() {

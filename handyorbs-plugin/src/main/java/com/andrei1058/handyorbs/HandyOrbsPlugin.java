@@ -32,6 +32,7 @@ public class HandyOrbsPlugin extends JavaPlugin implements HandyOrbs {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+        //todo make url configurable
         if (!OrbRepository.init("jdbc:sqlite:sample.db")){
             getLogger().severe("Could not connect to database!");
             Bukkit.getPluginManager().disablePlugin(this);

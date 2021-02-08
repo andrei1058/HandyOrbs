@@ -2,6 +2,7 @@ package com.andrei1058.handyorbs.core.version;
 
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_16_R3.*;
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -9,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
@@ -18,7 +20,7 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
     @Nullable
     public OrbEntity spawnOrbEntity(@NotNull org.bukkit.Location location, @NotNull ItemStack head) {
         if (location.getWorld() == null) return null;
-        return new VersionedOrbEntity(((CraftWorld) location.getWorld()).getHandle(), location.getBlockX(), location.getBlockY(), location.getBlockZ(), head);
+        return new VersionedOrbEntity(location, head);
     }
 
     private static class VersionedOrbEntity extends EntityArmorStand implements OrbEntity {
@@ -28,8 +30,8 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
         private double maxY;
         private double minY;
 
-        public VersionedOrbEntity(EntityTypes<? extends EntityArmorStand> entitytypes, World world) {
-            super(entitytypes, world);
+        public VersionedOrbEntity(EntityTypes<? extends EntityArmorStand> entities, World world) {
+            super(entities, world);
             setCustomNameVisible(true);
             setInvisible(true);
             setSmall(true);
@@ -41,12 +43,12 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
             noclip = true;
         }
 
-        public VersionedOrbEntity(World world, double x, double y, double z, ItemStack head) {
-            this(EntityTypes.ARMOR_STAND, world);
-            this.setPosition(x, y, z);
+        public VersionedOrbEntity(Location location, ItemStack head) {
+            this(EntityTypes.ARMOR_STAND, ((CraftWorld) Objects.requireNonNull(location.getWorld())).getHandle());
+            this.setPosition(location.getBlockX() + 0.5, location.getY(), location.getBlockZ() + 0.5);
             this.setSlot(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(head));
-            this.maxY = y + 1;
-            this.minY = y;
+            this.maxY = location.getY() + 1;
+            this.minY = location.getY();
             world.addEntity(this);
         }
 
@@ -56,7 +58,7 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
 
         @Override
         public EnumInteractionResult a(EntityHuman entityhuman, Vec3D vec3d, EnumHand enumhand) {
-            if (rightClickListener != null){
+            if (rightClickListener != null) {
                 rightClickListener.apply((Player) entityhuman.getBukkitEntity());
             }
             return EnumInteractionResult.FAIL;
@@ -90,8 +92,8 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
 
         @Override
         public void setDisplayName(String string) {
-            this.setCustomName(IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + (string == null ? " "
-                    : ChatColor.translateAlternateColorCodes('&', string)) + "\"}"));
+            this.getBukkitEntity().setCustomName(string == null ? " "
+                    : ChatColor.translateAlternateColorCodes('&', string));
         }
 
         @Override
@@ -121,12 +123,12 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
 
         @Override
         public int getChunkX() {
-            return this.chunkX;
+            return super.chunkX;
         }
 
         @Override
         public int getChunkZ() {
-            return this.chunkZ;
+            return super.chunkZ;
         }
 
         @Override
@@ -168,18 +170,20 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
         }
 
         @Override
-        protected @javax.annotation.Nullable SoundEffect getSoundDeath() {
+        protected @javax.annotation.Nullable
+        SoundEffect getSoundDeath() {
             return null;
         }
 
         @Override
-        protected @javax.annotation.Nullable SoundEffect getSoundHurt(DamageSource damagesource) {
+        protected @javax.annotation.Nullable
+        SoundEffect getSoundHurt(DamageSource damagesource) {
             return null;
         }
 
         @Override
         public String getName() {
-            if (getCustomName() == null){
+            if (getCustomName() == null) {
                 return " ";
             }
             return getCustomName().getText();
