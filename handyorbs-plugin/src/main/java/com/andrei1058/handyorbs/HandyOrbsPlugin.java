@@ -4,7 +4,8 @@ import com.andrei1058.handyorbs.api.HandyOrbs;
 import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
-import com.andrei1058.handyorbs.database.StorageManager;
+import com.andrei1058.handyorbs.database.OrbRepository;
+import com.andrei1058.handyorbs.listener.ChunkListener;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
 import com.andrei1058.handyorbs.test.Listener;
 import org.bukkit.Bukkit;
@@ -31,13 +32,16 @@ public class HandyOrbsPlugin extends JavaPlugin implements HandyOrbs {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        if (!StorageManager.init()){
+        if (!OrbRepository.init("jdbc:sqlite:sample.db")){
             getLogger().severe("Could not connect to database!");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
         OrbRegistry.init();
 
+        // Register listeners
+        Bukkit.getPluginManager().registerEvents(new ChunkListener(), this);
+        //todo test listener
         Bukkit.getPluginManager().registerEvents(new Listener(), this);
     }
 

@@ -30,6 +30,10 @@
                             <pattern>ch.jalu.configme</pattern>
                             <shadedPattern>com.andrei1058.handyorbs.libs</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>com.j256.ormlite</pattern>
+                            <shadedPattern>com.andrei1058.handyorbs.libs</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -147,6 +151,19 @@
             <groupId>com.andrei1058.dbi</groupId>
             <artifactId>DataBaseInterface</artifactId>
             <version>0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- ORM Lite -->
+        <dependency>
+            <groupId>com.j256.ormlite</groupId>
+            <artifactId>ormlite-jdbc</artifactId>
+            <version>5.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.j256.ormlite</groupId>
+            <artifactId>ormlite-core</artifactId>
+            <version>5.3</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
