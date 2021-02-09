@@ -30,7 +30,8 @@ public class Listener implements org.bukkit.event.Listener {
         if (event.getItem().getType() == Material.DIAMOND) {
             if (event.getPlayer().hasCooldown(event.getItem().getType())) return;
             event.getPlayer().setCooldown(event.getItem().getType(), 100);
-            OrbBase orb = OrbRegistry.getInstance().spawnOrb("wheat", OrbCategory.FARMING, event.getPlayer().getLocation(), 20);
+            OrbBase orb = OrbRegistry.getInstance().spawnOrb("wheat", OrbCategory.FARMING, event.getPlayer().getLocation().clone().add(0, 2, 0),
+                    "internal;cuboid;10", 10*20);
             if (orb != null) {
                 Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
                     OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);

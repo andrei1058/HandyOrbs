@@ -1,5 +1,6 @@
 package com.andrei1058.handyorbs.registry;
 
+import com.andrei1058.handyorbs.HandyOrbsPlugin;
 import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.WheatOrb;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class OrbRegistry {
@@ -74,14 +76,19 @@ public class OrbRegistry {
      * Spawn a new orb and save it to the database.
      */
     @Nullable
-    public OrbBase spawnOrb(String identifier, OrbCategory category, Location location, int radius) {
+    public OrbBase spawnOrb(String identifier, OrbCategory category, Location location, String regionData, Integer delay) {
         OrbCategoryRegistry subRegistry = getCategoryRegistry(category);
         if (subRegistry == null) return null;
         Class<? extends OrbBase> orb = subRegistry.getOrb(identifier);
         if (orb == null) return null;
         try {
-            Constructor<?> constructor = orb.getConstructor(Location.class, IRegion.class);
-            return (OrbBase) constructor.newInstance(location, new Cuboid(radius, location));
+            Constructor<?> constructor = orb.getConstructor(Location.class, IRegion.class, Integer.class);
+            IRegion region = parseRegion(location, regionData);
+            if (region == null){
+                HandyOrbsPlugin.getInstance().getLogger().severe("Could not spawn orb at " + location.toString() + " because region is invalid.");
+                return null;
+            }
+            return (OrbBase) constructor.newInstance(location, region, delay);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -127,5 +134,29 @@ public class OrbRegistry {
             removed += category.removeInstancesAtChunk(world, x, z);
         }
         return removed;
+    }
+
+    @Beta
+    @Nullable
+    public IRegion parseRegion(Location orbLoc, String data) {
+        String[] args = data.split(";");
+        if (args.length < 2) {
+            return null;
+        }
+        IRegion region = null;
+        switch (args[0].toLowerCase()) {
+            case "internal":
+                if (args[1].equalsIgnoreCase("cuboid") && args.length > 2) {
+                    try {
+                        int radius = Integer.parseInt(args[2]);
+                        region = new Cuboid(radius, orbLoc);
+                    } catch (Exception ex) {
+                        HandyOrbsPlugin.getInstance().getLogger().severe("Bad radius at: " + data);
+                    }
+                }
+                break;
+            case "wg":
+        }
+        return region;
     }
 }

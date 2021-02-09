@@ -79,4 +79,16 @@ public interface OrbEntity {
     double getMinY();
 
     void setAnimationUp(boolean toggle);
+
+    OrbActivity getOrbActivity();
+
+    void setOrbActivity(OrbActivity orbActivity);
+
+    void setDelay(int delay);
+
+    int getDelay();
+
+    void setHyperActivity(boolean hyperActivity);
+
+    boolean isHyperActivity();
 }

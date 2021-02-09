@@ -60,6 +60,7 @@ public class OrbRepository {
     public void saveUpdate(@NotNull OrbBase orbBase, OrbCategory category) {
         try {
             OrbEntity orb = new OrbEntity(orbBase, category);
+            orb.setRegion(orbBase.getRegion().toExport());
             orbDao.createOrUpdate(orb);
             orbBase.setOrbId(orb.getOrbId());
         } catch (SQLException ex) {

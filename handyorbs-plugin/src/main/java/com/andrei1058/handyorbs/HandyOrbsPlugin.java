@@ -55,7 +55,7 @@ public class HandyOrbsPlugin extends JavaPlugin implements HandyOrbs {
     }
 
     @Override
-    public OrbBase spawnOrb(String identifier, OrbCategory category, Location location, int radius) {
-        return OrbRegistry.getInstance().spawnOrb(identifier, category, location, radius);
+    public OrbBase spawnOrb(String identifier, OrbCategory category, Location location, String radius, int delay) {
+        return OrbRegistry.getInstance().spawnOrb(identifier, category, location, radius, delay);
     }
 }

@@ -38,6 +38,10 @@ public class OrbEntity {
     private int chunkZ;
     @DatabaseField(useGetSet = true)
     private String world;
+    // internal;cuboid;radius
+    // wg;regionName (orb needs to be in that region)
+    @DatabaseField(useGetSet = true)
+    private String region;
 
     public OrbEntity() {
         // ORM Constructor
@@ -164,5 +168,13 @@ public class OrbEntity {
 
     public void setChunkX(int chunkX) {
         this.chunkX = chunkX;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }

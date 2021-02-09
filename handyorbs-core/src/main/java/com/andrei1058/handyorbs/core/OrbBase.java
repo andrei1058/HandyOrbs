@@ -14,7 +14,7 @@ public abstract class OrbBase {
     private IRegion region;
     private OrbEntity orbEntity;
 
-    protected OrbBase(Location location, IRegion region) {
+    protected OrbBase(Location location, IRegion region, Integer delay) {
         this.world = location.getWorld() == null ? "null" : location.getWorld().getName();
         this.region = region;
         World world = Bukkit.getWorld(this.world);
@@ -22,6 +22,8 @@ public abstract class OrbBase {
         orbEntity = OrbEntityFactory.getInstance().spawnOrbEntity(new Location(world, location.getX(), location.getY(), location.getZ()), new ItemStack(Material.GOLD_BLOCK));
         if (orbEntity == null) throw new IllegalStateException("Could not spawn orb entity!");
 
+        //todo
+        orbEntity.setDelay(delay);
         orbEntity.setDisplayName("&x&F&E&D&B&F&0My &x&C&B&A&F&C&0Nice &x&5&1&4&6&4&COrb");
         orbEntity.setRightClickListener((player -> {
             player.sendMessage("right click " + (player.isSneaking() ? "(shifting)" : ""));
@@ -56,5 +58,9 @@ public abstract class OrbBase {
 
     public void setOrbId(int orbId) {
         this.orbId = orbId;
+    }
+
+    public IRegion getRegion() {
+        return region;
     }
 }

@@ -17,5 +17,5 @@ public interface HandyOrbs {
     /**
      * Spawn a new orb.
      */
-    OrbBase spawnOrb(String identifier, OrbCategory category, Location location, int radius);
+    OrbBase spawnOrb(String identifier, OrbCategory category, Location location, String radius, int delay);
 }

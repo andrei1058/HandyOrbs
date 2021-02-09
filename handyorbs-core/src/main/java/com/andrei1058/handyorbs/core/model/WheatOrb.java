@@ -1,24 +1,14 @@
 package com.andrei1058.handyorbs.core.model;
 
-import com.andrei1058.handyorbs.core.OrbBase;
+import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.region.IRegion;
 import org.bukkit.Location;
+import org.bukkit.Material;
 
-import java.util.UUID;
+public class WheatOrb extends GenericFarmOrb {
 
-public class WheatOrb extends OrbBase implements Ownable {
-
-    private UUID owner;
-
-    public WheatOrb(Location location, IRegion region) {
-        super(location, region);
+    public WheatOrb(Location location, IRegion region, Integer delay) {
+        super(location, region, Material.WHEAT, HandyOrbsCore.getInstance().getMaterialSupport().getSoil(), delay);
     }
 
-    public void setOwner(UUID owner) {
-        this.owner = owner;
-    }
-
-    public UUID getOwner() {
-        return owner;
-    }
 }
