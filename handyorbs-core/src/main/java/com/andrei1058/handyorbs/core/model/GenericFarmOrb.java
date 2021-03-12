@@ -2,14 +2,17 @@ package com.andrei1058.handyorbs.core.model;
 
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
+import com.andrei1058.handyorbs.core.ParticleLoc;
 import com.andrei1058.handyorbs.core.region.IRegion;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.UUID;
 
-public abstract class GenericFarmOrb extends OrbBase implements Ownable {
+public abstract class GenericFarmOrb extends OrbBase implements Ownable, Farmable {
 
     private static final Random random = new Random();
 
@@ -19,38 +22,71 @@ public abstract class GenericFarmOrb extends OrbBase implements Ownable {
     private final Material groundMaterial;
     private final LinkedList<Location> soil = new LinkedList<>();
 
+    private final LinkedList<ParticleLoc> particlePath = new LinkedList<>();
+    private final int[] countdown = new int[]{100};
+    private boolean instantGrowth = true;
+    private boolean hyperActivity = false;
+    private Location target = null;
+
     public GenericFarmOrb(final Location location, IRegion region, Material cropMaterial, Material groundMaterial, final int delay) {
         super(location, region, delay);
         this.cropMaterial = cropMaterial;
         this.groundMaterial = groundMaterial;
         prepareSoil(location.getWorld(), region);
+
         getOrbEntity().setOrbActivity(() -> {
-            if (soil.isEmpty()) return;
-            if (getOrbEntity().isHyperActivity()) {
-                // particles in region
-                // grow all blocks
-                for (Location loc : soil) {
-                    loc.getBlock().setType(getCropMaterial());
+            countdown[0]--;
+            if (countdown[0] < 0) {
+                if (particlePath.isEmpty()) {
+                    countdown[0] = delay;
+                    return;
                 }
-                //todo daca e server orb planteaza crescut
-                // check server orb cu owner == null
-            } else {
-                // grow block
-                int entry = random.nextInt(soil.size());
-                Location target = soil.remove(entry);
-                particlePath(location.getBlockX(), location.getBlockY() + 0.7, location.getBlockZ(), target, 0, true);
+                ParticleLoc particle = particlePath.remove(0);
+                HandyOrbsCore.getInstance().getParticleSupport().spawnParticle(target.getWorld(), "FIREWORKS_SPARK",
+                        particle.getX(), particle.getY(), particle.getZ(), 0, 0, 0, 0, 1);
+                if (particlePath.isEmpty() && target.getBlock().getType() == getUpperMaterial() && target.getBlock().getRelative(BlockFace.DOWN).getType() == getSoilMaterial()) {
+                    countdown[0] = delay;
+                    target.getBlock().setType(getCropMaterial());
+                    if (instantGrowth) {
+                        //todo not working
+                        HandyOrbsCore.getInstance().getBlockSupport().setBlockData(target.getBlock(), (byte) 7);
+                    }
+                    target = null;
+                }
+            } else if (countdown[0] == 0) {
+                if (soil.isEmpty()) return;
+                if (isHyperActivity()) {
+                    // particles in region
+                    // grow all blocks
+                    for (Location loc : soil) {
+                        loc.getBlock().setType(getCropMaterial());
+                    }
+                    //todo daca e server orb planteaza crescut
+                    // check server orb cu owner == null
+                } else {
+                    // grow block
+                    int entry = random.nextInt(soil.size());
+                    target = soil.remove(entry);
+                    particlePath(location.getBlockX(), location.getBlockY() + 0.7, location.getBlockZ(), target, 0);
+                    if (particlePath.isEmpty()) {
+                        countdown[0] = delay;
+                    }
+                }
             }
         });
     }
 
+    @Override
     public void setOwner(UUID owner) {
         this.owner = owner;
     }
 
+    @Override
     public UUID getOwner() {
         return owner;
     }
 
+    @Override
     public Material getCropMaterial() {
         return cropMaterial;
     }
@@ -59,21 +95,67 @@ public abstract class GenericFarmOrb extends OrbBase implements Ownable {
         soil.addAll(region.getSoilBlocks(world, groundMaterial));
     }
 
-    public void particlePath(double startX, double startY, double startZ, Location end, float procent, boolean instantGrowth) {
+    public void particlePath(double startX, double startY, double startZ, Location end, float procent) {
         if (Math.floor(procent) == 1) {
-            end.getBlock().setType(cropMaterial);
-            if (instantGrowth) {
-                HandyOrbsCore.getInstance().getBlockSupport().setBlockData(end.getBlock(), (byte) 7);
-            }
+            //end.getBlock().setType(getCropMaterial());
+            //if (instantGrowth) {
+            //    HandyOrbsCore.getInstance().getBlockSupport().setBlockData(end.getBlock(), (byte) 7);
+            //}
             return;
         }
         float locX = (float) (startX + (end.getBlockX() - startX) * procent);
         float locY = (float) (startY + (float) (end.getY() - startY) * procent);
         float locZ = (float) (startZ + (end.getBlockZ() - startZ) * procent);
-        Bukkit.getScheduler().runTaskLater(HandyOrbsCore.getInstance().getOwner(), () -> {
-            HandyOrbsCore.getInstance().getParticleSupport().spawnParticle(end.getWorld(), "FIREWORKS_SPARK",
-                    locX + 0.5f, locY, locZ + 0.5f, 0, 0, 0, 0, 1);
-            particlePath(startX, startY, startZ, end, procent + 0.05f, instantGrowth);
-        }, 1);
+        particlePath.add(new ParticleLoc(locX + 0.5f, locY + 1, locZ + 0.5f));
+        //Bukkit.getScheduler().runTaskLater(HandyOrbsCore.getInstance().getOwner(), () -> {
+        //HandyOrbsCore.getInstance().getParticleSupport().spawnParticle(end.getWorld(), "FIREWORKS_SPARK",
+        //      locX + 0.5f, locY, locZ + 0.5f, 0, 0, 0, 0, 1);
+        //}, 1);
+        particlePath(startX, startY, startZ, end, procent + 0.05f);
+    }
+
+    @Override
+    public Material getSoilMaterial() {
+        return groundMaterial;
+    }
+
+    @Override
+    public LinkedList<Location> getSoil() {
+        return soil;
+    }
+
+    public boolean isInstantGrowth() {
+        return instantGrowth;
+    }
+
+    public void setInstantGrowth(boolean instantGrowth) {
+        this.instantGrowth = instantGrowth;
+    }
+
+    public boolean isHyperActivity() {
+        return hyperActivity;
+    }
+
+    public void setHyperActivity(boolean hyperActivity) {
+        this.hyperActivity = hyperActivity;
+    }
+
+    @Override
+    public Block canPlant(Block soil) {
+        Block candidate = soil.getRelative(BlockFace.UP);
+        if (soil.getType() == getSoilMaterial() && candidate.getType() == getUpperMaterial() && getRegion().isInRegion(candidate.getLocation())) {
+            return candidate;
+        }
+        return null;
+    }
+
+    @Override
+    public void addSoil(Location location) {
+        soil.add(location);
+    }
+
+    @Override
+    public void removeSoil(Location location) {
+        soil.remove(location);
     }
 }

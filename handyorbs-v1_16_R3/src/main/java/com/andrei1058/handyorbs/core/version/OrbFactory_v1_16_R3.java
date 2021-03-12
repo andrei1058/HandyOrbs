@@ -3,7 +3,6 @@ package com.andrei1058.handyorbs.core.version;
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_16_R3.CraftParticle;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -30,9 +29,6 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
         private boolean animationUp = true;
         private double maxY;
         private double minY;
-        private int countdown;
-        private boolean hyperActivity = false;
-        private int delay = 20;
         private OrbActivity activity = () -> {
         };
 
@@ -72,17 +68,15 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
 
         @Override
         protected void doTick() {
+            //getBehaviorController().a(Activity.WORK);
+
         }
 
         @Override
         public void tick() {
             tickAnimation();
-            if (countdown == 0) {
-                countdown = delay;
-                activity.doTick();
-            } else {
-                countdown--;
-            }
+            activity.doTick();
+
             if (isAnimationUp()) {
                 world.getWorld().spawnParticle(org.bukkit.Particle.FIREWORKS_SPARK
                         , getLocX(), getLocY() + 1.3, getLocZ(), 1, 0.5, 0, 0.5, 0);
@@ -209,14 +203,6 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
             this.activity = activity;
         }
 
-        public void setDelay(int delay) {
-            this.delay = delay;
-        }
-
-        public int getDelay() {
-            return delay;
-        }
-
         @Override
         public OrbActivity getOrbActivity() {
             return activity;
@@ -225,22 +211,6 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
         @Override
         public void setOrbActivity(OrbActivity orbActivity) {
             this.activity = orbActivity;
-        }
-
-        public void setCountdown(int countdown) {
-            this.countdown = countdown;
-        }
-
-        public int getCountdown() {
-            return countdown;
-        }
-
-        public void setHyperActivity(boolean hyperActivity) {
-            this.hyperActivity = hyperActivity;
-        }
-
-        public boolean isHyperActivity() {
-            return hyperActivity;
         }
     }
 }

@@ -2,12 +2,14 @@ package com.andrei1058.handyorbs;
 
 import com.andrei1058.handyorbs.api.HandyOrbs;
 import com.andrei1058.handyorbs.api.OrbCategory;
+import com.andrei1058.handyorbs.command.HandyOrbsCommand;
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.database.OrbRepository;
+import com.andrei1058.handyorbs.gui.GUIManager;
 import com.andrei1058.handyorbs.listener.ChunkListener;
+import com.andrei1058.handyorbs.listener.OrbListener;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
-import com.andrei1058.handyorbs.test.Listener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,8 +44,13 @@ public class HandyOrbsPlugin extends JavaPlugin implements HandyOrbs {
 
         // Register listeners
         Bukkit.getPluginManager().registerEvents(new ChunkListener(), this);
-        //todo test listener
-        Bukkit.getPluginManager().registerEvents(new Listener(), this);
+        Bukkit.getPluginManager().registerEvents(new OrbListener(), this);
+
+        // Register commands
+        HandyOrbsCommand.init();
+
+        // Initialize GUIs
+        GUIManager.init();
     }
 
     public static HandyOrbsPlugin getInstance() {
@@ -57,5 +64,9 @@ public class HandyOrbsPlugin extends JavaPlugin implements HandyOrbs {
     @Override
     public OrbBase spawnOrb(String identifier, OrbCategory category, Location location, String radius, int delay) {
         return OrbRegistry.getInstance().spawnOrb(identifier, category, location, radius, delay);
+    }
+
+    public static void log(String msg){
+        Bukkit.getLogger().info(msg);
     }
 }

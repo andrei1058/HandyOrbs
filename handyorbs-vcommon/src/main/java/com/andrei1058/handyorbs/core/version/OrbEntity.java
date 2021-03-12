@@ -83,12 +83,4 @@ public interface OrbEntity {
     OrbActivity getOrbActivity();
 
     void setOrbActivity(OrbActivity orbActivity);
-
-    void setDelay(int delay);
-
-    int getDelay();
-
-    void setHyperActivity(boolean hyperActivity);
-
-    boolean isHyperActivity();
 }

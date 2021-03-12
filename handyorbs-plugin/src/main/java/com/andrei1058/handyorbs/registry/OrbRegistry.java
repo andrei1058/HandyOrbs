@@ -12,9 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class OrbRegistry {
     private static OrbRegistry instance;
@@ -134,6 +132,15 @@ public class OrbRegistry {
             removed += category.removeInstancesAtChunk(world, x, z);
         }
         return removed;
+    }
+
+    @Beta
+    public List<OrbBase> getActiveOrbsInChunk(String world, int x, int z) {
+        List<OrbBase> orbs = new ArrayList<>();
+        for (OrbCategoryRegistry category : orbTypeRegistry.values()) {
+            orbs.addAll(category.getActiveOrbsInChunk(world, x, z));
+        }
+        return orbs;
     }
 
     @Beta

@@ -23,7 +23,7 @@ public abstract class OrbBase {
         if (orbEntity == null) throw new IllegalStateException("Could not spawn orb entity!");
 
         //todo
-        orbEntity.setDelay(delay);
+        //orbEntity.setDelay(delay);
         orbEntity.setDisplayName("&x&F&E&D&B&F&0My &x&C&B&A&F&C&0Nice &x&5&1&4&6&4&COrb");
         orbEntity.setRightClickListener((player -> {
             player.sendMessage("right click " + (player.isSneaking() ? "(shifting)" : ""));

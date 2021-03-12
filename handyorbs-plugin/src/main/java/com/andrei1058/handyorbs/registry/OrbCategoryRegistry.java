@@ -1,13 +1,9 @@
 package com.andrei1058.handyorbs.registry;
 
+import com.andrei1058.handyorbs.HandyOrbsPlugin;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.google.common.annotations.Beta;
-import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -28,7 +24,7 @@ public class OrbCategoryRegistry {
     /**
      * Remove a orb type.
      *
-     * @param identifier orb identifier.
+     * @param identifier orb identifier (type).
      * @param deactivate deactivate loaded orbs of given type.
      */
     public void removeOrbs(String identifier, boolean deactivate) {
@@ -37,7 +33,7 @@ public class OrbCategoryRegistry {
     }
 
     /**
-     * Check if given identifier is already used.
+     * Check if given identifier (type) is already used.
      */
     public boolean isRegistered(String identifier) {
         return orbsByIdentifier.containsKey(identifier);
@@ -87,7 +83,7 @@ public class OrbCategoryRegistry {
             if (entry.getValue().getWorld().equals(world)) {
                 if (entry.getValue().getOrbEntity().getChunkX() == x && entry.getValue().getOrbEntity().getChunkZ() == z) {
                     toRemove.add(entry.getKey());
-                    Bukkit.broadcastMessage("Removed entity with id: " + entry.getKey());
+                    HandyOrbsPlugin.log("Removed entity with id: " + entry.getKey());
                 }
             }
         }
@@ -95,5 +91,17 @@ public class OrbCategoryRegistry {
         int size = toRemove.size();
         toRemove.forEach(activeOrbsById::remove);
         return size;
+    }
+
+    public List<OrbBase> getActiveOrbsInChunk(String world, int x, int z) {
+        List<OrbBase> orbs = new ArrayList<>();
+        for (OrbBase activeOrbs : activeOrbsById.values()){
+            if (activeOrbs.getWorld().equals(world)) {
+                if (activeOrbs.getOrbEntity().getChunkX() == x && activeOrbs.getOrbEntity().getChunkZ() == z) {
+                    orbs.add(activeOrbs);
+                }
+            }
+        }
+        return orbs;
     }
 }
