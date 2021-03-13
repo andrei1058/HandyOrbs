@@ -2,6 +2,7 @@ package com.andrei1058.handyorbs.core;
 
 import com.andrei1058.handyorbs.core.version.OrbEntityFactory;
 import com.andrei1058.spigot.versionsupport.BlockSupport;
+import com.andrei1058.spigot.versionsupport.ItemStackSupport;
 import com.andrei1058.spigot.versionsupport.MaterialSupport;
 import com.andrei1058.spigot.versionsupport.ParticleSupport;
 import org.bukkit.plugin.Plugin;
@@ -13,12 +14,14 @@ public class HandyOrbsCore {
     private final MaterialSupport materialSupport;
     private final BlockSupport blockSupport;
     private final ParticleSupport particleSupport;
+    private final ItemStackSupport itemStackSupport;
 
     private HandyOrbsCore(Plugin plugin) {
         this.owner = plugin;
         materialSupport = MaterialSupport.SupportBuilder.load();
         blockSupport = BlockSupport.SupportBuilder.load();
         particleSupport = ParticleSupport.SupportBuilder.load();
+        itemStackSupport = ItemStackSupport.SupportBuilder.load();
     }
 
     /**
@@ -60,4 +63,7 @@ public class HandyOrbsCore {
         return particleSupport;
     }
 
+    public ItemStackSupport getItemStackSupport() {
+        return itemStackSupport;
+    }
 }

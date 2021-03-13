@@ -3,6 +3,7 @@ package com.andrei1058.handyorbs;
 import com.andrei1058.handyorbs.api.HandyOrbs;
 import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.command.HandyOrbsCommand;
+import com.andrei1058.handyorbs.config.types.WheatOrbConfig;
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.database.OrbRepository;
@@ -25,6 +26,10 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 public class HandyOrbsPlugin extends JavaPlugin implements HandyOrbs {
 
     private static HandyOrbsPlugin instance;
+    public static final String ORB_ID_TAG = "handyorbsid";
+    public static final String ORB_CHECKER_TAG = "handyorbsorb";
+    public static final String ORB_TYPE_TAG = "handyorbstype";
+    public static final String ORB_CATEGORY_TAG = "handyorbcategory";
 
     @Override
     public void onEnable() {
@@ -51,6 +56,9 @@ public class HandyOrbsPlugin extends JavaPlugin implements HandyOrbs {
 
         // Initialize GUIs
         GUIManager.init();
+
+        // Calling this will create the file if it is missing
+        WheatOrbConfig.getConfig();
     }
 
     public static HandyOrbsPlugin getInstance() {

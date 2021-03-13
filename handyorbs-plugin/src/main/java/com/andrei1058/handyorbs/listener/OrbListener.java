@@ -1,14 +1,18 @@
 package com.andrei1058.handyorbs.listener;
 
 import com.andrei1058.handyorbs.HandyOrbsPlugin;
+import com.andrei1058.handyorbs.api.OrbCategory;
+import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.Farmable;
+import com.andrei1058.handyorbs.database.OrbRepository;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,6 +20,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class OrbListener implements Listener {
 
@@ -59,17 +64,17 @@ public class OrbListener implements Listener {
         for (OrbBase orb : OrbRegistry.getInstance().getActiveOrbsInChunk(
                 event.getBlock().getWorld().getName(),
                 event.getBlock().getChunk().getX(),
-                event.getBlock().getChunk().getZ())){
-            if (orb instanceof Farmable){
-                if (orb.getRegion().isInRegion(placedBlock.getLocation())){
-                    Bukkit.getScheduler().runTaskLater(HandyOrbsPlugin.getInstance(), ()->{
+                event.getBlock().getChunk().getZ())) {
+            if (orb instanceof Farmable) {
+                if (orb.getRegion().isInRegion(placedBlock.getLocation())) {
+                    Bukkit.getScheduler().runTaskLater(HandyOrbsPlugin.getInstance(), () -> {
                         // if placed on a soil block
-                        if (blockState.getType() == ((Farmable) orb).getSoilMaterial()){
+                        if (blockState.getType() == ((Farmable) orb).getSoilMaterial()) {
                             ((Farmable) orb).removeSoil(placedBlock.getLocation());
                         }
                         // if placed a soil block
                         Block upperBlock = ((Farmable) orb).canPlant(placedBlock);
-                        if (upperBlock != null){
+                        if (upperBlock != null) {
                             ((Farmable) orb).addSoil(upperBlock.getLocation());
                         }
                     }, 1L);
@@ -81,31 +86,72 @@ public class OrbListener implements Listener {
         }
     }
 
+    /**
+     * Listen for orb placement.
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onOrbPlace(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getItem() == null) return;
+        if (event.getClickedBlock() == null) return;
+
+        if (HandyOrbsCore.getInstance().getItemStackSupport().hasTag(event.getItem(), HandyOrbsPlugin.ORB_CHECKER_TAG)) {
+            event.setCancelled(true);
+            // todo, spawn by id, replace owner if needed, handle region and disabled categories
+            final Block clickedBlock = event.getClickedBlock();
+            final ItemStack item = event.getItem();
+            final Player player = event.getPlayer();
+            String id = HandyOrbsCore.getInstance().getItemStackSupport().getTag(item, HandyOrbsPlugin.ORB_ID_TAG);
+            String type = HandyOrbsCore.getInstance().getItemStackSupport().getTag(item, HandyOrbsPlugin.ORB_TYPE_TAG);
+            String category = HandyOrbsCore.getInstance().getItemStackSupport().getTag(item, HandyOrbsPlugin.ORB_CATEGORY_TAG);
+
+            // take item
+            final ItemStack icon = item.clone();
+            HandyOrbsCore.getInstance().getItemStackSupport().minusAmount(player, item, 1);
+
+            Bukkit.getScheduler().runTask(HandyOrbsPlugin.getInstance(), () -> {
+                OrbBase orb = OrbRegistry.getInstance().spawnOrb(type, OrbCategory.valueOf(category), clickedBlock.getLocation().clone().add(0, 2, 0),
+                        "internal;cuboid;10", 10 * 20);
+                if (orb != null) {
+                    orb.getOrbEntity().setIcon(icon);
+                    Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
+                        OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
+                        int orbId = orb.getOrbId();
+                        player.sendMessage("Spawned orb with ID: " + orbId);
+                    });
+                }
+            });
+        }
+    }
+
+    /**
+     * Listen for hoe and orb item interaction.
+     */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onHoe(PlayerInteractEvent event){
+    public void onHoe(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getItem() == null) return;
         if (event.getClickedBlock() == null) return;
         if (!isHoe(event.getItem().getType())) return;
         final Block clickedBlock = event.getClickedBlock();
         // needs to run later to make sure the block state is changed
-        Bukkit.getScheduler().runTaskLaterAsynchronously(HandyOrbsPlugin.getInstance(), ()-> {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
 
-        for (OrbBase orb : OrbRegistry.getInstance().getActiveOrbsInChunk(
-                clickedBlock.getWorld().getName(),
-                clickedBlock.getChunk().getX(),
-                clickedBlock.getChunk().getZ())) {
-            if (orb instanceof Farmable){
-                if (((Farmable) orb).getSoilMaterial() == clickedBlock.getType() && orb.getRegion().isInRegion(clickedBlock.getLocation())){
-                    Block upperBlock = ((Farmable) orb).canPlant(clickedBlock);
-                    if (upperBlock != null){
-                        ((Farmable) orb).addSoil(upperBlock.getLocation());
-                        // end cycle
-                        return;
+            for (OrbBase orb : OrbRegistry.getInstance().getActiveOrbsInChunk(
+                    clickedBlock.getWorld().getName(),
+                    clickedBlock.getChunk().getX(),
+                    clickedBlock.getChunk().getZ())) {
+                if (orb instanceof Farmable) {
+                    if (((Farmable) orb).getSoilMaterial() == clickedBlock.getType() && orb.getRegion().isInRegion(clickedBlock.getLocation())) {
+                        Block upperBlock = ((Farmable) orb).canPlant(clickedBlock);
+                        if (upperBlock != null) {
+                            ((Farmable) orb).addSoil(upperBlock.getLocation());
+                            // end cycle
+                            return;
+                        }
                     }
                 }
             }
-        }
         }, 1L);
     }
 

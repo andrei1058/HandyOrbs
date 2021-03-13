@@ -2,6 +2,7 @@ package com.andrei1058.handyorbs.command;
 
 import com.andrei1058.handyorbs.HandyOrbsPlugin;
 import com.andrei1058.handyorbs.api.OrbCategory;
+import com.andrei1058.handyorbs.config.types.WheatOrbConfig;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.database.OrbRepository;
 import com.andrei1058.handyorbs.gui.GUIManager;
@@ -54,15 +55,7 @@ public class HandyOrbsCommand extends FastRootCommand {
                 public void onExecute(CommandSender commandSender, @NotNull String[] strings) {
                     if (commandSender instanceof Player){
                         Player player = (Player) commandSender;
-                        OrbBase orb = OrbRegistry.getInstance().spawnOrb("wheat", OrbCategory.FARMING, player.getLocation().clone().add(0, 2, 0),
-                                "internal;cuboid;10", 10 * 20);
-                        if (orb != null) {
-                            Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
-                                OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
-                                int orbId = orb.getOrbId();
-                                player.sendMessage("Spawned orb with ID: " + orbId);
-                            });
-                        }
+                        player.getInventory().addItem(WheatOrbConfig.getGiveItem(null));
                     }
                 }
             });
