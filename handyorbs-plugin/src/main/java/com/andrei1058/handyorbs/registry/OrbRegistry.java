@@ -82,7 +82,7 @@ public class OrbRegistry {
         try {
             Constructor<?> constructor = orb.getConstructor(Location.class, IRegion.class, Integer.class);
             IRegion region = parseRegion(location, regionData);
-            if (region == null){
+            if (region == null) {
                 HandyOrbsPlugin.getInstance().getLogger().severe("Could not spawn orb at " + location.toString() + " because region is invalid.");
                 return null;
             }
@@ -139,6 +139,17 @@ public class OrbRegistry {
         List<OrbBase> orbs = new ArrayList<>();
         for (OrbCategoryRegistry category : orbTypeRegistry.values()) {
             orbs.addAll(category.getActiveOrbsInChunk(world, x, z));
+        }
+        return orbs;
+    }
+
+    /**
+     * Get a list o f orbs by checking if the given block is in their region.
+     */
+    public List<OrbBase> getActiveOrbsByBlock(String world, int x, int y, int z) {
+        List<OrbBase> orbs = new ArrayList<>();
+        for (OrbCategoryRegistry category : orbTypeRegistry.values()) {
+            orbs.addAll(category.getActiveOrbsByBlock(world, x, y, z));
         }
         return orbs;
     }

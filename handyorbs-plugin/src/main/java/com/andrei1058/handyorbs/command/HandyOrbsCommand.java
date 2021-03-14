@@ -50,13 +50,14 @@ public class HandyOrbsCommand extends FastRootCommand {
 
         public GetOrbCommand() {
             super("get");
-            withExecutor(new FastExecutor() {
-                @Override
-                public void onExecute(CommandSender commandSender, @NotNull String[] strings) {
-                    if (commandSender instanceof Player){
-                        Player player = (Player) commandSender;
-                        player.getInventory().addItem(WheatOrbConfig.getGiveItem(null));
+            withExecutor((commandSender, strings) -> {
+                if (commandSender instanceof Player){
+                    Player player = (Player) commandSender;
+                    if (!player.hasPermission("handyorbs.get")){
+                        //todo send permission message
+                        return;
                     }
+                    player.getInventory().addItem(WheatOrbConfig.getGiveItem(null));
                 }
             });
         }

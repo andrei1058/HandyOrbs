@@ -5,6 +5,7 @@ import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -108,7 +109,8 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
 
         @Override
         public void setIcon(ItemStack itemStack) {
-            setSlot(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(itemStack), true);
+            ((ArmorStand)getBukkitEntity()).setHelmet(itemStack);
+            //setSlot(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(itemStack), true);
         }
 
         @Override

@@ -10,6 +10,8 @@ public interface IRegion {
 
     boolean isInRegion(Location location);
 
+    boolean isInRegion(int x, int y, int z);
+
     /**
      * Region data to be saved to db.
      */

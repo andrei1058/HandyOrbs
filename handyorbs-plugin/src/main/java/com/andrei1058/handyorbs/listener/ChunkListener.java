@@ -33,7 +33,6 @@ public class ChunkListener implements Listener {
                         orb.setOrbId(model.getOrbId());
                         OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCategory);
                         registry.addActiveOrb(orb.getOrbId(), orb);
-                        Bukkit.broadcastMessage("Spawning orb with ID: " + model.getOrbId());
                     }
                 }
             });

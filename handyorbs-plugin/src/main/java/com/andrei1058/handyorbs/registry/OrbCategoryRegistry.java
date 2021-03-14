@@ -95,9 +95,21 @@ public class OrbCategoryRegistry {
 
     public List<OrbBase> getActiveOrbsInChunk(String world, int x, int z) {
         List<OrbBase> orbs = new ArrayList<>();
-        for (OrbBase activeOrbs : activeOrbsById.values()){
+        for (OrbBase activeOrbs : activeOrbsById.values()) {
             if (activeOrbs.getWorld().equals(world)) {
                 if (activeOrbs.getOrbEntity().getChunkX() == x && activeOrbs.getOrbEntity().getChunkZ() == z) {
+                    orbs.add(activeOrbs);
+                }
+            }
+        }
+        return orbs;
+    }
+
+    public Collection<? extends OrbBase> getActiveOrbsByBlock(String world, int x, int y, int z) {
+        List<OrbBase> orbs = new ArrayList<>();
+        for (OrbBase activeOrbs : activeOrbsById.values()) {
+            if (activeOrbs.getWorld().equals(world)) {
+                if (activeOrbs.getRegion().isInRegion(x, y, z)) {
                     orbs.add(activeOrbs);
                 }
             }

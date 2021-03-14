@@ -5,7 +5,9 @@ import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.Farmable;
+import com.andrei1058.handyorbs.core.model.Ownable;
 import com.andrei1058.handyorbs.database.OrbRepository;
+import com.andrei1058.handyorbs.registry.OrbCategoryRegistry;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -29,10 +31,9 @@ public class OrbListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(final BlockBreakEvent event) {
-        for (OrbBase orb : OrbRegistry.getInstance().getActiveOrbsInChunk(
-                event.getBlock().getWorld().getName(),
-                event.getBlock().getChunk().getX(),
-                event.getBlock().getChunk().getZ())) {
+        final Block block = event.getBlock();
+        for (OrbBase orb : OrbRegistry.getInstance().getActiveOrbsByBlock(
+                block.getWorld().getName(), block.getX(), block.getY(), block.getZ())) {
             if (orb instanceof Farmable) {
                 final Block brokenBlock = event.getBlock();
                 if (orb.getRegion().isInRegion(brokenBlock.getLocation())) {
@@ -61,10 +62,8 @@ public class OrbListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         final BlockState blockState = event.getBlockReplacedState();
         final Block placedBlock = event.getBlockPlaced();
-        for (OrbBase orb : OrbRegistry.getInstance().getActiveOrbsInChunk(
-                event.getBlock().getWorld().getName(),
-                event.getBlock().getChunk().getX(),
-                event.getBlock().getChunk().getZ())) {
+        for (OrbBase orb : OrbRegistry.getInstance().getActiveOrbsByBlock(
+                blockState.getWorld().getName(), blockState.getX(), blockState.getY(), blockState.getZ())) {
             if (orb instanceof Farmable) {
                 if (orb.getRegion().isInRegion(placedBlock.getLocation())) {
                     Bukkit.getScheduler().runTaskLater(HandyOrbsPlugin.getInstance(), () -> {
@@ -110,14 +109,20 @@ public class OrbListener implements Listener {
             HandyOrbsCore.getInstance().getItemStackSupport().minusAmount(player, item, 1);
 
             Bukkit.getScheduler().runTask(HandyOrbsPlugin.getInstance(), () -> {
-                OrbBase orb = OrbRegistry.getInstance().spawnOrb(type, OrbCategory.valueOf(category), clickedBlock.getLocation().clone().add(0, 2, 0),
+                final OrbCategory orbCat = OrbCategory.valueOf(category);
+                OrbBase orb = OrbRegistry.getInstance().spawnOrb(type, orbCat, clickedBlock.getLocation().clone().add(0, 2, 0),
                         "internal;cuboid;10", 10 * 20);
                 if (orb != null) {
-                    orb.getOrbEntity().setIcon(icon);
+                    if (orb instanceof Ownable){
+                        ((Ownable) orb).setOwner(player.getUniqueId());
+                    }
                     Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
                         OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
                         int orbId = orb.getOrbId();
                         player.sendMessage("Spawned orb with ID: " + orbId);
+
+                        OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCat);
+                        registry.addActiveOrb(orb.getOrbId(), orb);
                     });
                 }
             });
@@ -137,10 +142,8 @@ public class OrbListener implements Listener {
         // needs to run later to make sure the block state is changed
         Bukkit.getScheduler().runTaskLaterAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
 
-            for (OrbBase orb : OrbRegistry.getInstance().getActiveOrbsInChunk(
-                    clickedBlock.getWorld().getName(),
-                    clickedBlock.getChunk().getX(),
-                    clickedBlock.getChunk().getZ())) {
+            for (OrbBase orb : OrbRegistry.getInstance().getActiveOrbsByBlock(
+                    clickedBlock.getWorld().getName(), clickedBlock.getX(), clickedBlock.getY(), clickedBlock.getZ())) {
                 if (orb instanceof Farmable) {
                     if (((Farmable) orb).getSoilMaterial() == clickedBlock.getType() && orb.getRegion().isInRegion(clickedBlock.getLocation())) {
                         Block upperBlock = ((Farmable) orb).canPlant(clickedBlock);

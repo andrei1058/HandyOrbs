@@ -36,6 +36,11 @@ public class Cuboid implements IRegion {
     }
 
     @Override
+    public boolean isInRegion(int x, int y, int z) {
+        return (x <= maxX && x >= minX) && (y <= maxY && y >= minY) && (z <= maxZ && z >= minZ);
+    }
+
+    @Override
     public String toExport() {
         return "internal;cuboid;" + ((maxX - minX) / 2);
     }

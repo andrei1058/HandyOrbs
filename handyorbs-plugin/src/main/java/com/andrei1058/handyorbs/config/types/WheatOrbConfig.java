@@ -10,6 +10,7 @@ import ch.jalu.configme.properties.StringProperty;
 import com.andrei1058.handyorbs.HandyOrbsPlugin;
 import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
+import com.andrei1058.handyorbs.core.model.WheatOrb;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -18,8 +19,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class WheatOrbConfig implements SettingsHolder {
-
-    private static ItemStack cachedItemStack = null;
 
     private WheatOrbConfig() {
     }
@@ -54,19 +53,17 @@ public class WheatOrbConfig implements SettingsHolder {
     }
 
     public static ItemStack getCachedItemStack() {
-        if (cachedItemStack == null) {
+        if (WheatOrb.getCachedIcon() == null) {
             String option = getConfig().getProperty(ITEM_STACK);
             if (option.startsWith("skin:")) {
-                cachedItemStack = HandyOrbsCore.getInstance().getItemStackSupport().applySkinTextureOnHead(option.replaceFirst("skin:", "").trim(), null);
+                WheatOrb.setCachedIcon(HandyOrbsCore.getInstance().getItemStackSupport().applySkinTextureOnHead(option.replaceFirst("skin:", "").trim(), null));
             } else if (option.startsWith("material:")) {
                 String[] options = option.replaceFirst("material:", "").trim().split(",");
                 byte data = options.length > 1 ? Byte.valueOf(options[1]) : 0;
-                cachedItemStack = HandyOrbsCore.getInstance().getItemStackSupport().createItem(options[0], 1, data);
-            } else {
-                cachedItemStack = new ItemStack(Material.BEDROCK);
+                WheatOrb.setCachedIcon(HandyOrbsCore.getInstance().getItemStackSupport().createItem(options[0], 1, data));
             }
         }
-        return cachedItemStack;
+        return WheatOrb.getCachedIcon() == null ? new ItemStack(Material.HAY_BLOCK) : WheatOrb.getCachedIcon();
     }
 
     /**
