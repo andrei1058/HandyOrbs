@@ -123,7 +123,7 @@ public class OrbListener implements Listener {
                     Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
                         OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
                         int orbId = orb.getOrbId();
-                        player.sendMessage("Spawned orb with ID: " + orbId);
+//                        player.sendMessage("Spawned orb with ID: " + orbId);
 
                         OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCat);
                         registry.addActiveOrb(orb.getOrbId(), orb);

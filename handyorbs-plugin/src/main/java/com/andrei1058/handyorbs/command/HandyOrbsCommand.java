@@ -1,15 +1,9 @@
 package com.andrei1058.handyorbs.command;
 
-import com.andrei1058.handyorbs.HandyOrbsPlugin;
-import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.config.types.WheatOrbConfig;
-import com.andrei1058.handyorbs.core.OrbBase;
-import com.andrei1058.handyorbs.database.OrbRepository;
 import com.andrei1058.handyorbs.gui.GUIManager;
-import com.andrei1058.handyorbs.registry.OrbRegistry;
 import com.andrei1058.spigot.commandlib.fast.FastRootCommand;
 import com.andrei1058.spigot.commandlib.fast.FastSubCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
