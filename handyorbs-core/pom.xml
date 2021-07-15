@@ -10,6 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>handyorbs-core</artifactId>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -57,19 +63,19 @@
         <dependency>
             <groupId>com.andrei1058.spigot.versionsupport</groupId>
             <artifactId>material-version</artifactId>
-            <version>1.5.3-SNAPSHOT</version>
+            <version>1.5.4-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.versionsupport</groupId>
             <artifactId>block-version</artifactId>
-            <version>1.5.3-SNAPSHOT</version>
+            <version>1.5.4-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.versionsupport</groupId>
             <artifactId>particle-version</artifactId>
-            <version>1.5.3-SNAPSHOT</version>
+            <version>1.5.4-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

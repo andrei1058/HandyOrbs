@@ -47,8 +47,7 @@ public abstract class GenericFarmOrb extends OrbBase implements Ownable, Farmabl
                 if (particlePath.isEmpty() && target.getBlock().getType() == getUpperMaterial() && target.getBlock().getRelative(BlockFace.DOWN).getType() == getSoilMaterial()) {
                     countdown[0] = delay;
                     target.getBlock().setType(getCropMaterial());
-                    if (instantGrowth) {
-                        //todo not working
+                    if (isInstantGrowth()) {
                         HandyOrbsCore.getInstance().getBlockSupport().setBlockData(target.getBlock(), (byte) 7);
                     }
                     target = null;
@@ -61,8 +60,9 @@ public abstract class GenericFarmOrb extends OrbBase implements Ownable, Farmabl
                     for (Location loc : soil) {
                         loc.getBlock().setType(getCropMaterial());
                     }
-                    //todo daca e server orb planteaza crescut
-                    // check server orb cu owner == null
+                    if (getOwner() == null){
+                        HandyOrbsCore.getInstance().getBlockSupport().setBlockData(target.getBlock(), (byte) 7);
+                    }
                 } else {
                     // grow block
                     int entry = random.nextInt(soil.size());
@@ -97,20 +97,12 @@ public abstract class GenericFarmOrb extends OrbBase implements Ownable, Farmabl
 
     public void particlePath(double startX, double startY, double startZ, Location end, float procent) {
         if (Math.floor(procent) == 1) {
-            //end.getBlock().setType(getCropMaterial());
-            //if (instantGrowth) {
-            //    HandyOrbsCore.getInstance().getBlockSupport().setBlockData(end.getBlock(), (byte) 7);
-            //}
             return;
         }
         float locX = (float) (startX + (end.getBlockX() - startX) * procent);
         float locY = (float) (startY + (float) (end.getY() - startY) * procent);
         float locZ = (float) (startZ + (end.getBlockZ() - startZ) * procent);
         particlePath.add(new ParticleLoc(locX + 0.5f, locY + 1, locZ + 0.5f));
-        //Bukkit.getScheduler().runTaskLater(HandyOrbsCore.getInstance().getOwner(), () -> {
-        //HandyOrbsCore.getInstance().getParticleSupport().spawnParticle(end.getWorld(), "FIREWORKS_SPARK",
-        //      locX + 0.5f, locY, locZ + 0.5f, 0, 0, 0, 0, 1);
-        //}, 1);
         particlePath(startX, startY, startZ, end, procent + 0.05f);
     }
 

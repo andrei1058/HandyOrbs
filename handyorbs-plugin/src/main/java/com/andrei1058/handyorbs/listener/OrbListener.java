@@ -113,9 +113,13 @@ public class OrbListener implements Listener {
                 OrbBase orb = OrbRegistry.getInstance().spawnOrb(type, orbCat, clickedBlock.getLocation().clone().add(0, 2, 0),
                         "internal;cuboid;10", 10 * 20);
                 if (orb != null) {
+                    if (id != null && !id.isEmpty()){
+                        orb.setOrbId(Integer.parseInt(id));
+                    }
                     if (orb instanceof Ownable){
                         ((Ownable) orb).setOwner(player.getUniqueId());
                     }
+                    orb.getOrbEntity().setIcon(icon);
                     Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
                         OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
                         int orbId = orb.getOrbId();

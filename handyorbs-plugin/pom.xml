@@ -10,6 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>handyorbs-plugin</artifactId>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -71,6 +77,10 @@
         <repository>
             <id>andrei1058-releases</id>
             <url>http://repo.andrei1058.com/releases</url>
+        </repository>
+        <repository>
+            <id>oss</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -168,13 +178,13 @@
         <dependency>
             <groupId>com.j256.ormlite</groupId>
             <artifactId>ormlite-jdbc</artifactId>
-            <version>5.3</version>
+            <version>5.6</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.j256.ormlite</groupId>
             <artifactId>ormlite-core</artifactId>
-            <version>5.3</version>
+            <version>5.6</version>
             <scope>compile</scope>
         </dependency>
         <!-- Command Lib -->

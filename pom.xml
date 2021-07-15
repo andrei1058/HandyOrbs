@@ -16,6 +16,11 @@
         <module>handyorbs-v1_16_R3</module>
     </modules>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
     <repositories>
         <repository>
             <id>spigot-repo</id>
@@ -24,6 +29,10 @@
         <repository>
             <id>nms-repo</id>
             <url>https://repo.codemc.io/repository/nms/</url>
+        </repository>
+        <repository>
+            <id>andrei-repo</id>
+            <url>https://repo.andrei1058.com/snapshots/</url>
         </repository>
     </repositories>
 
