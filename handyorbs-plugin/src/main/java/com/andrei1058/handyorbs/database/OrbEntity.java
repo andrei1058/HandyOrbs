@@ -33,9 +33,9 @@ public class OrbEntity {
     @DatabaseField(canBeNull = false, useGetSet = true)
     private boolean nameStatus;
     @DatabaseField(useGetSet = true)
-    private int chunkX;
+    private Integer chunkX;
     @DatabaseField(useGetSet = true)
-    private int chunkZ;
+    private Integer chunkZ;
     @DatabaseField(useGetSet = true)
     private String world;
     // internal;cuboid;radius
@@ -154,19 +154,19 @@ public class OrbEntity {
         this.nameStatus = nameStatus;
     }
 
-    public int getChunkX() {
+    public Integer getChunkX() {
         return chunkX;
     }
 
-    public int getChunkZ() {
+    public Integer getChunkZ() {
         return chunkZ;
     }
 
-    public void setChunkZ(int chunkZ) {
+    public void setChunkZ(@Nullable Integer chunkZ) {
         this.chunkZ = chunkZ;
     }
 
-    public void setChunkX(int chunkX) {
+    public void setChunkX(@Nullable Integer chunkX) {
         this.chunkX = chunkX;
     }
 

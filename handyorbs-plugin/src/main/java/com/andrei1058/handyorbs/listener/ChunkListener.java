@@ -3,6 +3,7 @@ package com.andrei1058.handyorbs.listener;
 import com.andrei1058.handyorbs.HandyOrbsPlugin;
 import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.core.OrbBase;
+import com.andrei1058.handyorbs.core.model.Ownable;
 import com.andrei1058.handyorbs.database.OrbEntity;
 import com.andrei1058.handyorbs.database.OrbRepository;
 import com.andrei1058.handyorbs.registry.OrbCategoryRegistry;
@@ -32,6 +33,14 @@ public class ChunkListener implements Listener {
                     if (orb != null) {
                         orb.setOrbId(model.getOrbId());
                         OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCategory);
+
+                        // initialize and register orb
+                        orb.getOrbEntity().setDisplayName(model.getDisplayName());
+                        orb.getOrbEntity().setCustomNameVisible(model.isNameStatus());
+                        orb.getOrbEntity().setRightClickListener(OrbRightClickHandler.getInstance().getDefaultRightClickListener(orb));
+                        if (orb instanceof Ownable){
+                            ((Ownable) orb).setOwner(model.getOwner());
+                        }
                         registry.addActiveOrb(orb.getOrbId(), orb);
                     }
                 }

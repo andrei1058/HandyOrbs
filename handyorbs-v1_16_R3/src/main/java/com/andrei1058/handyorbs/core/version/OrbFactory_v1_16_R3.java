@@ -114,6 +114,11 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
         }
 
         @Override
+        public ItemStack getIcon() {
+            return ((ArmorStand)getBukkitEntity()).getHelmet();
+        }
+
+        @Override
         public void destroy() {
             super.die();
         }
@@ -195,10 +200,7 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
 
         @Override
         public String getName() {
-            if (getCustomName() == null) {
-                return " ";
-            }
-            return getCustomName().getText();
+            return getBukkitEntity().getCustomName();
         }
 
         public void setActivity(OrbActivity activity) {

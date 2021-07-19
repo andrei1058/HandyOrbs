@@ -21,6 +21,11 @@ public interface OrbEntity {
     void setIcon(ItemStack itemStack);
 
     /**
+     * Get armor stand helmet.
+     */
+    ItemStack getIcon();
+
+    /**
      * Remove entity.
      */
     void destroy();

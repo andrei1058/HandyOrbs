@@ -1,10 +1,11 @@
 package com.andrei1058.handyorbs.core;
 
-import com.andrei1058.handyorbs.core.model.Ownable;
 import com.andrei1058.handyorbs.core.region.IRegion;
 import com.andrei1058.handyorbs.core.version.OrbEntity;
 import com.andrei1058.handyorbs.core.version.OrbEntityFactory;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class OrbBase {
@@ -21,19 +22,6 @@ public abstract class OrbBase {
         if (world == null) throw new IllegalStateException("World is not loaded!");
         orbEntity = OrbEntityFactory.getInstance().spawnOrbEntity(new Location(world, location.getX(), location.getY(), location.getZ()), new ItemStack(Material.GOLD_BLOCK));
         if (orbEntity == null) throw new IllegalStateException("Could not spawn orb entity!");
-
-        //todo
-        //orbEntity.setDelay(delay);
-        orbEntity.setDisplayName("&x&F&E&D&B&F&0My &x&C&B&A&F&C&0Nice &x&5&1&4&6&4&COrb");
-        orbEntity.setRightClickListener((player -> {
-            player.sendMessage("right click " + (player.isSneaking() ? "(shifting)" : ""));
-            player.sendMessage("World: " + this.world);
-            player.sendMessage("ID: " + orbId);
-            if (this instanceof Ownable) {
-                player.sendMessage("Owner: " + ((Ownable) this).getOwner());
-            }
-            return null;
-        }));
     }
 
     public void unLoad() {

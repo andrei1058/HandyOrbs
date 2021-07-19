@@ -2,10 +2,13 @@ package com.andrei1058.handyorbs.listener;
 
 import com.andrei1058.handyorbs.HandyOrbsPlugin;
 import com.andrei1058.handyorbs.api.OrbCategory;
+import com.andrei1058.handyorbs.config.types.WheatOrbConfig;
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.Farmable;
 import com.andrei1058.handyorbs.core.model.Ownable;
+import com.andrei1058.handyorbs.core.model.WheatOrb;
+import com.andrei1058.handyorbs.database.OrbEntity;
 import com.andrei1058.handyorbs.database.OrbRepository;
 import com.andrei1058.handyorbs.registry.OrbCategoryRegistry;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
@@ -105,29 +108,53 @@ public class OrbListener implements Listener {
             String category = HandyOrbsCore.getInstance().getItemStackSupport().getTag(item, HandyOrbsPlugin.ORB_CATEGORY_TAG);
 
             // take item
-            final ItemStack icon = item.clone();
             HandyOrbsCore.getInstance().getItemStackSupport().minusAmount(player, item, 1);
 
             Bukkit.getScheduler().runTask(HandyOrbsPlugin.getInstance(), () -> {
                 final OrbCategory orbCat = OrbCategory.valueOf(category);
                 OrbBase orb = OrbRegistry.getInstance().spawnOrb(type, orbCat, clickedBlock.getLocation().clone().add(0, 2, 0),
-                        "internal;cuboid;10", 10 * 20);
+                        "internal;cuboid;"+WheatOrbConfig.getConfig().getProperty(WheatOrbConfig.INTERNAL_REGION_SIZE), 10 * 20);
                 if (orb != null) {
-                    if (id != null && !id.isEmpty()){
-                        orb.setOrbId(Integer.parseInt(id));
-                    }
-                    if (orb instanceof Ownable){
+                    if (orb instanceof Ownable) {
+                        // will replace existing owner with the current placer
                         ((Ownable) orb).setOwner(player.getUniqueId());
                     }
-                    orb.getOrbEntity().setIcon(icon);
-                    Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
-                        OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
-                        int orbId = orb.getOrbId();
-//                        player.sendMessage("Spawned orb with ID: " + orbId);
+                    if (id != null && !id.isEmpty()) {
+                        orb.setOrbId(Integer.parseInt(id));
 
-                        OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCat);
-                        registry.addActiveOrb(orb.getOrbId(), orb);
-                    });
+
+                        Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
+                            OrbEntity model = OrbRepository.getInstance().getOrbById(Integer.parseInt(id));
+                            if (model != null) {
+                                Bukkit.getScheduler().runTask(HandyOrbsPlugin.getInstance(), ()-> {
+                                    orb.getOrbEntity().setDisplayName(model.getDisplayName());
+                                    orb.getOrbEntity().setCustomNameVisible(model.isNameStatus());
+                                    //todo load more data from the model?
+
+                                    orb.getOrbEntity().setRightClickListener(OrbRightClickHandler.getInstance().getDefaultRightClickListener(orb));
+                                    orb.getOrbEntity().setIcon(WheatOrbConfig.getCachedItemStack());
+                                    Bukkit.getScheduler().runTaskLaterAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
+                                        OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
+                                        OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCat);
+                                        registry.addActiveOrb(orb.getOrbId(), orb);
+                                    }, 2L);
+                                });
+                            }
+                        });
+                    } else {
+                        Bukkit.getScheduler().runTaskLater(HandyOrbsPlugin.getInstance(), () -> {
+                            orb.getOrbEntity().setDisplayName(WheatOrbConfig.getConfig().getProperty(WheatOrbConfig.PLAYER_ORB_NAME)
+                                    .replace("{player}", player.getDisplayName()));
+                            orb.getOrbEntity().setRightClickListener(OrbRightClickHandler.getInstance().getDefaultRightClickListener(orb));
+                            orb.getOrbEntity().setIcon(WheatOrbConfig.getCachedItemStack());
+
+                            Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
+                                OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
+                                OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCat);
+                                registry.addActiveOrb(orb.getOrbId(), orb);
+                            });
+                        }, 2L);
+                    }
                 }
             });
         }

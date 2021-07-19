@@ -5,6 +5,7 @@ import ch.jalu.configme.SettingsHolder;
 import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;
 import ch.jalu.configme.configurationdata.CommentsConfiguration;
+import ch.jalu.configme.properties.IntegerProperty;
 import ch.jalu.configme.properties.Property;
 import ch.jalu.configme.properties.StringProperty;
 import com.andrei1058.handyorbs.HandyOrbsPlugin;
@@ -28,6 +29,13 @@ public class WheatOrbConfig implements SettingsHolder {
             "skin:codeHere - you can get skins from minecraft-heads.com and paste here the 'Minecraft-URL' after 'skin:'",
             "material:name,data - where name is the material name and data is the material data for 1.12-."})
     public static final Property<String> ITEM_STACK = new StringProperty("item-stack", "skin:4e3ca5b390d1e5f297283257ce90ac6f8783d786ecaee095b49cc6b944d72d");
+
+    @Comment({"The orb name when it is placed by a player."})
+    public static final Property<String> PLAYER_ORB_NAME = new StringProperty("orb-name-player", "&7{player}'s &eWheat Orb");
+    @Comment({"The orb name when it is converted to a server orb."})
+    public static final Property<String> SERVER_ORB_NAME = new StringProperty("server-name-player", "&e&lWheat Orb");
+    @Comment({"Cuboid region size in blocks.", "Even if you change this, existing orbs will keep their size."})
+    public static final Property<Integer> INTERNAL_REGION_SIZE = new IntegerProperty("internal-region-size", 10);
 
     @Override
     public void registerComments(CommentsConfiguration conf) {

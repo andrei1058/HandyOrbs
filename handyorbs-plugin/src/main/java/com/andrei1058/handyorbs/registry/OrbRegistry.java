@@ -6,7 +6,9 @@ import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.WheatOrb;
 import com.andrei1058.handyorbs.core.region.Cuboid;
 import com.andrei1058.handyorbs.core.region.IRegion;
+import com.andrei1058.handyorbs.database.OrbRepository;
 import com.google.common.annotations.Beta;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,6 +94,34 @@ public class OrbRegistry {
         }
         return null;
     }
+
+    /**
+     * Despawn an orb.
+     */
+    public void despawnOrb(OrbBase orb){
+        OrbCategory orbCategory = getActiveOrbCategory(orb.getOrbId());
+        if (orbCategory != null){
+            OrbCategoryRegistry subRegistry = getCategoryRegistry(orbCategory);
+            subRegistry.removeActiveOrb(orb.getOrbId());
+        }
+        orb.getOrbEntity().destroy();
+    }
+
+    /**
+     * Despawn an orb.
+     */
+    public void despawnOrb(OrbBase orb, OrbCategory category){
+        int orbId = orb.getOrbId();
+        if (category != null){
+            OrbCategoryRegistry subRegistry = getCategoryRegistry(category);
+            subRegistry.removeActiveOrb(orbId);
+        }
+        orb.getOrbEntity().destroy();
+        Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), ()-> {
+            OrbRepository.getInstance().markOrbAsRemovedFromGround(orbId);
+        });
+    }
+
 
     @Nullable
     public OrbBase getActiveOrbById(int orbId) {

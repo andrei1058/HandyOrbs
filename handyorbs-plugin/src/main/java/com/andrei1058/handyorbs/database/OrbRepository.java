@@ -7,6 +7,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
@@ -57,10 +58,35 @@ public class OrbRepository {
         return chunkOrbs;
     }
 
+    public OrbEntity getOrbById(int id){
+        try {
+            return orbDao.queryForId(id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
+
+    public void markOrbAsRemovedFromGround(int id){
+        OrbEntity orb = getOrbById(id);
+        if (orb != null){
+            orb.setChunkX(null);
+            orb.setChunkZ(null);
+            try {
+                orbDao.updateId(orb, id);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
     public void saveUpdate(@NotNull OrbBase orbBase, OrbCategory category) {
         try {
             OrbEntity orb = new OrbEntity(orbBase, category);
             orb.setRegion(orbBase.getRegion().toExport());
+            orb.setDisplayName(orbBase.getDisplayName());
+            orb.setChunkZ(orbBase.getOrbEntity().getChunkZ());
+            orb.setChunkX(orbBase.getOrbEntity().getChunkX());
             orbDao.createOrUpdate(orb);
             orbBase.setOrbId(orb.getOrbId());
         } catch (SQLException ex) {
