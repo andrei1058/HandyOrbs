@@ -137,7 +137,7 @@ public class OrbListener implements Listener {
                                         OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
                                         OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCat);
                                         registry.addActiveOrb(orb.getOrbId(), orb);
-                                    }, 2L);
+                                    }, 1L);
                                 });
                             }
                         });
@@ -149,11 +149,16 @@ public class OrbListener implements Listener {
                             orb.getOrbEntity().setIcon(WheatOrbConfig.getCachedItemStack());
 
                             Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
-                                OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
-                                OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCat);
-                                registry.addActiveOrb(orb.getOrbId(), orb);
+                                OrbEntity orbEntity = OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
+                                if (orbEntity != null){
+                                    Bukkit.getScheduler().runTask(HandyOrbsPlugin.getInstance(), ()-> {
+                                        orb.setOrbId(orbEntity.getOrbId());
+                                        OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCat);
+                                        registry.addActiveOrb(orb.getOrbId(), orb);
+                                    });
+                                }
                             });
-                        }, 2L);
+                        }, 1L);
                     }
                 }
             });

@@ -116,10 +116,10 @@ public class OrbRegistry {
             OrbCategoryRegistry subRegistry = getCategoryRegistry(category);
             subRegistry.removeActiveOrb(orbId);
         }
+        Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(),
+                ()-> OrbRepository.getInstance().markOrbAsRemovedFromGround(orbId));
+
         orb.getOrbEntity().destroy();
-        Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), ()-> {
-            OrbRepository.getInstance().markOrbAsRemovedFromGround(orbId);
-        });
     }
 
 
