@@ -1,9 +1,12 @@
 package com.andrei1058.handyorbs.core.version;
 
+import com.mojang.datafixers.util.Pair;
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -11,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -109,13 +114,16 @@ public class OrbFactory_v1_16_R3 implements WrappedFactory {
 
         @Override
         public void setIcon(ItemStack itemStack) {
-            ((ArmorStand)getBukkitEntity()).setHelmet(itemStack);
-            //setSlot(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(itemStack), true);
+            setSlot(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(itemStack), true);
+            List<Pair<EnumItemSlot, net.minecraft.server.v1_16_R3.ItemStack>> equipment = new ArrayList<>();
+            equipment.add(new Pair<>(EnumItemSlot.HEAD, this.getEquipment(EnumItemSlot.HEAD)));
+            PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(this.getId(), equipment);
+            this.getWorld().getPlayers().forEach(player -> ((CraftPlayer)player.getBukkitEntity()).getHandle().playerConnection.sendPacket(packet));
         }
 
         @Override
         public ItemStack getIcon() {
-            return ((ArmorStand)getBukkitEntity()).getHelmet();
+            return CraftItemStack.asBukkitCopy(this.getEquipment(EnumItemSlot.HEAD));
         }
 
         @Override
