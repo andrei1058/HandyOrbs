@@ -6,16 +6,20 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 public class OrbEntityFactory {
 
     private static OrbEntityFactory instance;
 
     private final WrappedFactory wrappedFactory;
 
-    private OrbEntityFactory() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    private OrbEntityFactory() throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         String version = Bukkit.getServer().getClass().getName().split("\\.")[3];
         Class<?> wrappedFactoryClass = Class.forName("com.andrei1058.handyorbs.core.version.OrbFactory_" + version);
-        this.wrappedFactory = (WrappedFactory) wrappedFactoryClass.newInstance();
+        Constructor<?> constructor = wrappedFactoryClass.getConstructor();
+        this.wrappedFactory = (WrappedFactory) constructor.newInstance();
     }
 
     /**

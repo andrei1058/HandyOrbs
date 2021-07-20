@@ -3,7 +3,6 @@ package com.andrei1058.handyorbs.registry;
 import com.andrei1058.handyorbs.HandyOrbsPlugin;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.google.common.annotations.Beta;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;

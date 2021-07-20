@@ -7,10 +7,8 @@ import com.andrei1058.handyorbs.registry.OrbRegistry;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
@@ -20,11 +18,10 @@ import java.util.List;
 public class OrbRepository {
 
     private static OrbRepository instance;
-    private final ConnectionSource connectionSource;
-    private Dao<OrbEntity, Integer> orbDao;
+    private final Dao<OrbEntity, Integer> orbDao;
 
     private OrbRepository(String url) throws SQLException {
-        connectionSource = new JdbcConnectionSource(url);
+        ConnectionSource connectionSource = new JdbcConnectionSource(url);
         orbDao = DaoManager.createDao(connectionSource, OrbEntity.class);
         TableUtils.createTableIfNotExists(connectionSource, OrbEntity.class);
     }

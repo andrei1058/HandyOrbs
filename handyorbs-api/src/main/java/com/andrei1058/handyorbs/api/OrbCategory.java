@@ -5,5 +5,5 @@ public enum OrbCategory {
     FARMING,
     SPECIAL,
     PVP,
-    OTHER;
+    OTHER
 }

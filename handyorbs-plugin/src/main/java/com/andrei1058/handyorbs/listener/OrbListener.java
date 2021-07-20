@@ -7,7 +7,6 @@ import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.Farmable;
 import com.andrei1058.handyorbs.core.model.Ownable;
-import com.andrei1058.handyorbs.core.model.WheatOrb;
 import com.andrei1058.handyorbs.database.OrbEntity;
 import com.andrei1058.handyorbs.database.OrbRepository;
 import com.andrei1058.handyorbs.registry.OrbCategoryRegistry;
