@@ -5,6 +5,7 @@ import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.Ownable;
+import com.andrei1058.handyorbs.gui.GUIManager;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -53,7 +54,7 @@ public class OrbRightClickHandler {
                                 }
                             }
                         } else {
-                            //todo open GUI
+                            GUIManager.getInstance().openOrbGUI(orbBase, player);
                         }
                     }
                 }

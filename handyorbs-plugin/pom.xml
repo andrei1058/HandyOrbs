@@ -16,20 +16,27 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-snapshots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>16</source>
+                    <target>16</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.3.0-SNAPSHOT</version>
                 <configuration>
                     <relocations>
                         <relocation>
@@ -47,6 +54,10 @@
                         <relocation>
                             <pattern>com.andrei1058.spigot.commandlib</pattern>
                             <shadedPattern>com.andrei1058.handyorbs.libs.commandlib</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>net.wesjd.anvilgui</pattern>
+                            <shadedPattern>com.andrei1058.handyorbs.libs.anvilgui</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -81,6 +92,10 @@
         <repository>
             <id>oss</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>codemc-snapshots</id>
+            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
         </repository>
     </repositories>
 
@@ -192,6 +207,12 @@
             <groupId>com.andrei1058.spigot.commandlib</groupId>
             <artifactId>CommandLib</artifactId>
             <version>1.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.wesjd</groupId>
+            <artifactId>anvilgui</artifactId>
+            <version>1.5.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

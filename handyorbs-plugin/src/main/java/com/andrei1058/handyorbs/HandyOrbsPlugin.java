@@ -3,6 +3,7 @@ package com.andrei1058.handyorbs;
 import com.andrei1058.handyorbs.api.HandyOrbs;
 import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.command.HandyOrbsCommand;
+import com.andrei1058.handyorbs.config.MainConfig;
 import com.andrei1058.handyorbs.config.types.WheatOrbConfig;
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
@@ -65,6 +66,7 @@ public class HandyOrbsPlugin extends JavaPlugin implements HandyOrbs {
 
         // Calling this will create the file if it is missing
         WheatOrbConfig.getConfig();
+        MainConfig.getConfig();
         // Calling this will initialize orb icon
         WheatOrbConfig.getCachedItemStack();
     }
