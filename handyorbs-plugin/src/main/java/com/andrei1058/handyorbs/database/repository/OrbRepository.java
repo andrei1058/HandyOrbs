@@ -1,14 +1,16 @@
-package com.andrei1058.handyorbs.database;
+package com.andrei1058.handyorbs.database.repository;
 
+import com.andrei1058.handyorbs.HandyOrbsPlugin;
 import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.Ownable;
+import com.andrei1058.handyorbs.database.model.OrbEntity;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
@@ -20,24 +22,15 @@ public class OrbRepository {
     private static OrbRepository instance;
     private final Dao<OrbEntity, Integer> orbDao;
 
-    private OrbRepository(String url) throws SQLException {
-        ConnectionSource connectionSource = new JdbcConnectionSource(url);
+    private OrbRepository(ConnectionSource connectionSource) throws SQLException {
         orbDao = DaoManager.createDao(connectionSource, OrbEntity.class);
         TableUtils.createTableIfNotExists(connectionSource, OrbEntity.class);
     }
 
-    /**
-     * @return false if could not init.
-     */
-    public static boolean init(String url) {
-        if (instance == null) {
-            try {
-                instance = new OrbRepository(url);
-            } catch (SQLException ignored) {
-                return false;
-            }
+    public static void init(ConnectionSource connectionSource) throws SQLException {
+        if (instance == null){
+            instance = new OrbRepository(connectionSource);
         }
-        return true;
     }
 
     public static OrbRepository getInstance() {
@@ -65,6 +58,20 @@ public class OrbRepository {
             throwables.printStackTrace();
         }
         return null;
+    }
+
+    public void updateOrbName(OrbBase orbBase) {
+        Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), ()-> {
+            OrbEntity orb = getOrbById(orbBase.getOrbId());
+            if (orb != null){
+                orb.setDisplayName(orbBase.getDisplayName());
+                try {
+                    orbDao.createOrUpdate(orb);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        });
     }
 
     public void markOrbAsRemovedFromGround(int id){

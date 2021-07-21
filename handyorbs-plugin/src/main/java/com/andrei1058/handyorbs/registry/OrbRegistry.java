@@ -6,7 +6,7 @@ import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.WheatOrb;
 import com.andrei1058.handyorbs.core.region.Cuboid;
 import com.andrei1058.handyorbs.core.region.IRegion;
-import com.andrei1058.handyorbs.database.OrbRepository;
+import com.andrei1058.handyorbs.database.repository.OrbRepository;
 import com.google.common.annotations.Beta;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

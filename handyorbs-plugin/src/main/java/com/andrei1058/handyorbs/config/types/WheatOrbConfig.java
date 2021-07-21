@@ -43,7 +43,7 @@ public class WheatOrbConfig implements SettingsHolder {
     }
 
     public static SettingsManager getConfig() {
-        File templateFile = new File(HandyOrbsPlugin.getInstance().getDataFolder(), "types" + File.separator + "wheat.yml");
+        File templateFile = new File(HandyOrbsPlugin.getInstance().getDataFolder(), "Types" + File.separator + "wheat.yml");
         if (!templateFile.getParentFile().exists()) {
             if (!templateFile.getParentFile().mkdirs()) {
                 HandyOrbsPlugin.getInstance().getLogger().warning("Could not create: " + templateFile.getPath());

@@ -1,4 +1,4 @@
-package com.andrei1058.handyorbs.database;
+package com.andrei1058.handyorbs.database.model;
 
 import java.util.UUID;
 
