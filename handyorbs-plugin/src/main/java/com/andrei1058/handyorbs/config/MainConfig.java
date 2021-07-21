@@ -47,7 +47,7 @@ public class MainConfig implements SettingsHolder {
 
     @Override
     public void registerComments(CommentsConfiguration conf) {
-        conf.setComment("self-orb-gui", " ", "Configuration for the orb GUI (shift + right click your orb).");
+        conf.setComment("self-orb-gui", " ", "Configuration for the GUI when you right click your orb.");
         conf.setComment("locale", " ", "Language configuration.");
         conf.setComment("database",  " ", "Database configuration.");
     }
