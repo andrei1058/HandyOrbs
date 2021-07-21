@@ -15,6 +15,8 @@ public enum Message {
     ORB_RENAME_GUI_NAME("orb-rename-gui-name", "&7Enter a new orb name:"),
     ORB_RENAME_ITEM_NAME("orb-rename-item-name", "&eChange orb name"),
     ORB_RENAME_ITEM_LORE("orb-rename-item-lore", Collections.emptyList()),
+    ORB_TOGGLE_TOGGLE_ITEM_NAME("orb-toggle-name-item-name", "&bToggle orb name visibility"),
+    ORB_TOGGLE_NAME_ITEM_LORE("orb-toggle-name-item-lore", Collections.emptyList()),
     ORB_SELF_GUI_NAME("orb-gui-name", "&7My {orbName}")
 
 

@@ -26,9 +26,15 @@ public class MainConfig implements SettingsHolder {
     @Comment("With this on true language preferences will be stored on db.")
     public static final Property<Boolean> LOCALE_SYNC_DB = new BooleanProperty("locale.sync-to-db", true);
     @Comment({"The display item on which you click to change the orb name :)"})
-    public static final StringProperty CHANGE_NAME_MATERIAL = new StringProperty("self-orb-gui.change-name-material", Material.FEATHER.toString());
+    public static final StringProperty ORB_GUI_CHANGE_NAME_MATERIAL = new StringProperty("self-orb-gui.change-name-material", Material.FEATHER.toString());
     @Comment({"The slot number where to put the item in the inventory."})
-    public static final IntegerProperty CHANGE_NAME_SLOT = new IntegerProperty("self-orb-gui.change-name-slot", 0);
+    public static final IntegerProperty ORB_GUI_CHANGE_NAME_SLOT = new IntegerProperty("self-orb-gui.change-name-slot", 0);
+    @Comment({"The display item on which you click to toggle the orb name visibility."})
+    public static final StringProperty ORB_GUI_TOGGLE_NAME_MATERIAL = new StringProperty("self-orb-gui.toggle-name-visibility-material", Material.SOUL_LANTERN.toString());
+    @Comment({"The slot number where to put the item in the inventory."})
+    public static final IntegerProperty ORB_GUI_TOGGLE_NAME_SLOT = new IntegerProperty("self-orb-gui.toggle-name-visibility-slot", 1);
+    @Comment({"Orb name char limit"})
+    public static final IntegerProperty ORB_NAME_CHAR_LIMIT = new IntegerProperty("orb-name-char-limit", 20);
 
     @Comment({
             "For SQLite use: jdbc:sqlite:./plugins/HandyOrbsReborn/local_orbs.db",

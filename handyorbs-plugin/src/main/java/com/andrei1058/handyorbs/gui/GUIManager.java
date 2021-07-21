@@ -2,6 +2,7 @@ package com.andrei1058.handyorbs.gui;
 
 import com.andrei1058.handyorbs.HandyOrbsPlugin;
 import com.andrei1058.handyorbs.api.locale.Message;
+import com.andrei1058.handyorbs.config.MainConfig;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.Ownable;
 import com.andrei1058.handyorbs.database.repository.OrbRepository;
@@ -10,6 +11,7 @@ import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.Main;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -57,6 +59,10 @@ public class GUIManager {
     public void openReName(OrbBase orbBase, Player owner) {
         new AnvilGUI.Builder()
                 .onComplete((player, text) -> {
+                    int charLength = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', text)).length();
+                    if (charLength > MainConfig.getConfig().getProperty(MainConfig.ORB_NAME_CHAR_LIMIT)){
+                        return AnvilGUI.Response.close();
+                    }
                     orbBase.getOrbEntity().setDisplayName(ChatColor.translateAlternateColorCodes('&', text));
                     OrbRepository.getInstance().updateOrbName(orbBase);
                     return AnvilGUI.Response.close();

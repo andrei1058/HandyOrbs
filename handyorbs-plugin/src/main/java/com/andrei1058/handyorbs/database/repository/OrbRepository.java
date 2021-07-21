@@ -74,6 +74,20 @@ public class OrbRepository {
         });
     }
 
+    public void updateOrbNameVisibility(OrbBase orbBase) {
+        Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), ()-> {
+            OrbEntity orb = getOrbById(orbBase.getOrbId());
+            if (orb != null){
+                orb.setNameStatus(orbBase.getOrbEntity().getCustomNameVisible());
+                try {
+                    orbDao.createOrUpdate(orb);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        });
+    }
+
     public void markOrbAsRemovedFromGround(int id){
         OrbEntity orb = getOrbById(id);
         if (orb != null){
