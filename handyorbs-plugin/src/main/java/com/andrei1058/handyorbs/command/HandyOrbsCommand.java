@@ -1,7 +1,7 @@
 package com.andrei1058.handyorbs.command;
 
-import com.andrei1058.handyorbs.config.types.WheatOrbConfig;
 import com.andrei1058.handyorbs.gui.GUIManager;
+import com.andrei1058.handyorbs.registry.OrbRegistry;
 import com.andrei1058.spigot.commandlib.fast.FastRootCommand;
 import com.andrei1058.spigot.commandlib.fast.FastSubCommand;
 import org.bukkit.command.CommandSender;
@@ -21,8 +21,7 @@ public class HandyOrbsCommand extends FastRootCommand {
     @Override
     public void execute(@NotNull CommandSender s, @NotNull String[] args, @NotNull String st) {
         if (args.length == 0) {
-            if (s instanceof Player){
-                Player player = (Player) s;
+            if (s instanceof Player player){
                 GUIManager.getInstance().openSelf(player, player);
             }
         } else {
@@ -44,16 +43,17 @@ public class HandyOrbsCommand extends FastRootCommand {
 
         public GetOrbCommand() {
             super("get");
+            setPermissions(new String[]{"handyorbs.get"});
             withExecutor((commandSender, strings) -> {
-                if (commandSender instanceof Player){
-                    Player player = (Player) commandSender;
-                    if (!player.hasPermission("handyorbs.get")){
-                        //todo send permission message
-                        return;
+
+                if (commandSender instanceof Player player){
+                    if (OrbRegistry.getInstance().getOrbTypes().contains(strings[0].toLowerCase())){
+                        player.getInventory().addItem(OrbRegistry.getInstance().getOrbItem(strings[0], player));
                     }
-                    player.getInventory().addItem(WheatOrbConfig.getGiveItem(null));
                 }
             });
+
+            withTabSuggestions(s -> OrbRegistry.getInstance().getOrbTypes());
         }
     }
 }

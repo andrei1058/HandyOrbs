@@ -1,23 +1,15 @@
 package com.andrei1058.handyorbs.listener;
 
 import com.andrei1058.handyorbs.HandyOrbsPlugin;
-import com.andrei1058.handyorbs.api.OrbCategory;
-import com.andrei1058.handyorbs.config.types.WheatOrbConfig;
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.Farmable;
-import com.andrei1058.handyorbs.core.model.Ownable;
-import com.andrei1058.handyorbs.core.model.TimedOrb;
-import com.andrei1058.handyorbs.database.model.OrbEntity;
-import com.andrei1058.handyorbs.database.repository.OrbRepository;
-import com.andrei1058.handyorbs.registry.OrbCategoryRegistry;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,7 +17,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class OrbListener implements Listener {
 

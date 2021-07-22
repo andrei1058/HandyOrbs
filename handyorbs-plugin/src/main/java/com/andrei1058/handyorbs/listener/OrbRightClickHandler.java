@@ -32,6 +32,11 @@ public class OrbRightClickHandler {
                         if (player.isSneaking()) {
                             if (player.getInventory().getItemInMainHand().getType() == Material.AIR || player.getInventory().getItemInOffHand().getType() == Material.AIR) {
                                 ItemStack icon = orbBase.getOrbEntity().getIcon();
+                                var im = icon.getItemMeta();
+                                if (im != null){
+                                    im.setDisplayName(orbBase.getDisplayName());
+                                    icon.setItemMeta(im);
+                                }
                                 OrbCategory orbCategory = OrbRegistry.getInstance().getActiveOrbCategory(orbBase.getOrbId());
                                 if (orbCategory != null) {
                                     String orbType = OrbRegistry.getInstance().getActiveOrbIdentifier(orbBase);

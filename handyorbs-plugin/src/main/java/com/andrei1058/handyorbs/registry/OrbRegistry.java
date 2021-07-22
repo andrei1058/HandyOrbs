@@ -16,6 +16,7 @@ import com.andrei1058.handyorbs.database.repository.OrbRepository;
 import com.andrei1058.handyorbs.listener.OrbRightClickHandler;
 import com.google.common.annotations.Beta;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -255,7 +256,10 @@ public class OrbRegistry {
         final String id = HandyOrbsCore.getInstance().getItemStackSupport().getTag(item, HandyOrbsPlugin.ORB_ID_TAG);
         final String type = HandyOrbsCore.getInstance().getItemStackSupport().getTag(item, HandyOrbsPlugin.ORB_TYPE_TAG);
         final String category = HandyOrbsCore.getInstance().getItemStackSupport().getTag(item, HandyOrbsPlugin.ORB_CATEGORY_TAG);
-        final OrbCategory orbCat = OrbCategory.valueOf(category);
+        if (category == null) {
+            return;
+        }
+        final OrbCategory orbCat = OrbCategory.valueOf(category.toUpperCase());
 
         OrbCategoryRegistry categoryRegistry = getCategoryRegistry(orbCat);
         OrbDefaultsProvider defaults = categoryRegistry.getDefaultProviders().get(type);
@@ -325,5 +329,64 @@ public class OrbRegistry {
                 });
             }
         });
+    }
+
+    /**
+     * Get a list of orbs.
+     */
+    public List<String> getOrbTypes() {
+        List<String> types = new ArrayList<>();
+        orbTypeRegistry.forEach((category, registry) -> types.addAll(registry.getOrbTypes()));
+        return types;
+    }
+
+    @Nullable
+    public OrbCategory getCategoryByOrbType(String type) {
+        for (var entry : orbTypeRegistry.entrySet()) {
+            if (entry.getValue().getOrb(type) != null) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    public OrbCategoryRegistry getCategoryRegistryByOrbType(String type) {
+        for (var entry : orbTypeRegistry.entrySet()) {
+            if (entry.getValue().getOrb(type) != null) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    public ItemStack getOrbItem(String string, Player player) {
+
+        var category = getCategoryByOrbType(string);
+        if (category == null) {
+            throw new IllegalStateException("This should not happen");
+        }
+
+        var categoryRegistry = getCategoryRegistryByOrbType(string);
+        if (categoryRegistry == null) {
+            throw new IllegalStateException("This should not happen");
+        }
+
+        var defaults = categoryRegistry.getDefaultProviders().get(string);
+        if (defaults == null) {
+            throw new IllegalStateException("This should not happen");
+        }
+
+        var orbItem = defaults.getDefaultIcon();
+        var im = orbItem.getItemMeta();
+        if (im != null) {
+            im.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+                    defaults.getDefaultDisplayName().replace("{player}", player.getDisplayName())
+            ));
+            orbItem.setItemMeta(im);
+        }
+        orbItem = HandyOrbsCore.getInstance().getItemStackSupport().addTag(orbItem, HandyOrbsPlugin.ORB_TYPE_TAG, string);
+        orbItem = HandyOrbsCore.getInstance().getItemStackSupport().addTag(orbItem, HandyOrbsPlugin.ORB_CATEGORY_TAG, category.toString().toLowerCase());
+        orbItem = HandyOrbsCore.getInstance().getItemStackSupport().addTag(orbItem, HandyOrbsPlugin.ORB_CHECKER_TAG, "yes");
+        return orbItem;
     }
 }

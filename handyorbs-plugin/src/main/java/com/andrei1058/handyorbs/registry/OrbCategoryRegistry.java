@@ -123,4 +123,8 @@ public class OrbCategoryRegistry {
     public Map<String, OrbDefaultsProvider> getDefaultProviders() {
         return defaultProviders;
     }
+
+    public Collection<String> getOrbTypes() {
+        return orbsByIdentifier.keySet();
+    }
 }
