@@ -2,6 +2,7 @@ package com.andrei1058.handyorbs;
 
 import com.andrei1058.handyorbs.api.HandyOrbs;
 import com.andrei1058.handyorbs.api.OrbCategory;
+import com.andrei1058.handyorbs.api.OrbDefaultsProvider;
 import com.andrei1058.handyorbs.api.locale.LocaleManager;
 import com.andrei1058.handyorbs.command.HandyOrbsCommand;
 import com.andrei1058.handyorbs.config.MainConfig;
@@ -32,7 +33,7 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
 import java.sql.SQLException;
 
-@Plugin(name = "HandyOrbsReborn", version = "3.0.0")
+@Plugin(name = "HandyOrbsReborn", version = "1.0")
 @Description("Orbs that come in handy.")
 @ApiVersion(value = ApiVersion.Target.v1_13)
 @Author("andrei1058")
@@ -110,8 +111,8 @@ public class HandyOrbsPlugin extends JavaPlugin implements HandyOrbs {
         return instance;
     }
 
-    public boolean registerOrb(String identifier, Class<? extends OrbBase> orb, OrbCategory category) {
-        return OrbRegistry.getInstance().registerOrb(identifier, orb, category);
+    public boolean registerOrb(String identifier, Class<? extends OrbBase> orb, OrbCategory category, OrbDefaultsProvider defaultsProvider) {
+        return OrbRegistry.getInstance().registerOrb(identifier, orb, category, defaultsProvider);
     }
 
     @Override

@@ -6,7 +6,7 @@ import org.bukkit.block.Block;
 
 import java.util.LinkedList;
 
-public interface Farmable {
+public interface Farmable extends TimedOrb {
 
     LinkedList<Location> getSoil();
 

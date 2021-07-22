@@ -24,7 +24,8 @@ public abstract class GenericFarmOrb extends OrbBase implements Ownable, Farmabl
 
     private final LinkedList<ParticleLoc> particlePath = new LinkedList<>();
     private final int[] countdown = new int[]{100};
-    private boolean instantGrowth = true;
+    private int activityDelay;
+    private boolean instantGrowth = false;
     private boolean hyperActivity = false;
     private Location target = null;
 
@@ -32,6 +33,7 @@ public abstract class GenericFarmOrb extends OrbBase implements Ownable, Farmabl
         super(location, region, delay);
         this.cropMaterial = cropMaterial;
         this.groundMaterial = groundMaterial;
+        this.activityDelay = delay;
         prepareSoil(location.getWorld(), region);
 
         getOrbEntity().setOrbActivity(() -> {
@@ -120,6 +122,7 @@ public abstract class GenericFarmOrb extends OrbBase implements Ownable, Farmabl
         return instantGrowth;
     }
 
+    @SuppressWarnings("unused")
     public void setInstantGrowth(boolean instantGrowth) {
         this.instantGrowth = instantGrowth;
     }
@@ -128,6 +131,7 @@ public abstract class GenericFarmOrb extends OrbBase implements Ownable, Farmabl
         return hyperActivity;
     }
 
+    @SuppressWarnings("unused")
     public void setHyperActivity(boolean hyperActivity) {
         this.hyperActivity = hyperActivity;
     }
@@ -149,5 +153,22 @@ public abstract class GenericFarmOrb extends OrbBase implements Ownable, Farmabl
     @Override
     public void removeSoil(Location location) {
         soil.remove(location);
+    }
+
+    @Override
+    public void setActivityDelay(int ticks) {
+        if (ticks > 1){
+            this.activityDelay = ticks;
+        }
+    }
+
+    @Override
+    public int getActivityDelay() {
+        return activityDelay;
+    }
+
+    @Override
+    public int getCountdown() {
+        return countdown[0];
     }
 }

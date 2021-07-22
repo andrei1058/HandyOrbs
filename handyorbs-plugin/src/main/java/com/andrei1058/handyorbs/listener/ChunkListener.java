@@ -28,8 +28,7 @@ public class ChunkListener implements Listener {
                 for (OrbEntity model : models) {
                     Location loc = new Location(event.getWorld(), model.getLocX(), model.getLocY(), model.getLocZ());
                     OrbCategory orbCategory = OrbCategory.valueOf(model.getCategory());
-                    //todo implement delay
-                    OrbBase orb = OrbRegistry.getInstance().spawnOrb(model.getType(), orbCategory, loc, model.getRegion(), 100);
+                    OrbBase orb = OrbRegistry.getInstance().spawnOrb(model.getType(), orbCategory, loc, model.getRegion(), model.getActivityDelay());
                     if (orb != null) {
                         orb.setOrbId(model.getOrbId());
                         OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCategory);

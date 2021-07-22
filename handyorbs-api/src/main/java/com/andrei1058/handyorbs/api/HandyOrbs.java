@@ -9,11 +9,12 @@ public interface HandyOrbs {
     /**
      * Register a new orb.
      *
-     * @param identifier unique identifier.
-     * @param orb        orb class.
-     * @param category   orb category.
+     * @param identifier           unique identifier.
+     * @param orb                  orb class.
+     * @param category             orb category.
+     * @param defaultsProvider default properties.
      */
-    boolean registerOrb(String identifier, Class<? extends OrbBase> orb, OrbCategory category);
+    boolean registerOrb(String identifier, Class<? extends OrbBase> orb, OrbCategory category, OrbDefaultsProvider defaultsProvider);
 
     /**
      * Spawn a new orb.

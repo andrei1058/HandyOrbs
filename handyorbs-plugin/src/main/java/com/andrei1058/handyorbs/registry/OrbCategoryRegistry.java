@@ -1,6 +1,7 @@
 package com.andrei1058.handyorbs.registry;
 
 import com.andrei1058.handyorbs.HandyOrbsPlugin;
+import com.andrei1058.handyorbs.api.OrbDefaultsProvider;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.google.common.annotations.Beta;
 import org.jetbrains.annotations.Nullable;
@@ -11,12 +12,14 @@ public class OrbCategoryRegistry {
 
     private final HashMap<String, Class<? extends OrbBase>> orbsByIdentifier = new HashMap<>();
     private final Map<Integer, OrbBase> activeOrbsById = new HashMap<>();
+    private final Map<String, OrbDefaultsProvider> defaultProviders = new HashMap<>();
 
-    public boolean addOrb(String identifier, Class<? extends OrbBase> orb) {
+    public boolean addOrb(String identifier, Class<? extends OrbBase> orb, OrbDefaultsProvider defaultsProvider) {
         if (orbsByIdentifier.containsKey(identifier)) {
             return false;
         }
         orbsByIdentifier.put(identifier, orb);
+        defaultProviders.put(identifier, defaultsProvider);
         return true;
     }
 
@@ -28,6 +31,7 @@ public class OrbCategoryRegistry {
      */
     public void removeOrbs(String identifier, boolean deactivate) {
         orbsByIdentifier.remove(identifier);
+        defaultProviders.remove(identifier);
         //todo implement deactivate
     }
 
@@ -114,5 +118,9 @@ public class OrbCategoryRegistry {
             }
         }
         return orbs;
+    }
+
+    public Map<String, OrbDefaultsProvider> getDefaultProviders() {
+        return defaultProviders;
     }
 }

@@ -4,6 +4,7 @@ import com.andrei1058.handyorbs.HandyOrbsPlugin;
 import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.Ownable;
+import com.andrei1058.handyorbs.core.model.TimedOrb;
 import com.andrei1058.handyorbs.database.model.OrbEntity;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
 import com.j256.ormlite.dao.Dao;
@@ -127,6 +128,9 @@ public class OrbRepository {
                 orb.setNameStatus(orbBase.getOrbEntity().getCustomNameVisible());
                 orb.setChunkX(orbBase.getOrbEntity().getChunkX());
                 orb.setChunkZ(orbBase.getOrbEntity().getChunkZ());
+                if (orbBase instanceof TimedOrb){
+                    orb.setActivityDelay(((TimedOrb) orbBase).getActivityDelay());
+                }
             }
             orb.setRegion(orbBase.getRegion().toExport());
             orbDao.createOrUpdate(orb);

@@ -37,6 +37,8 @@ public class WheatOrbConfig implements SettingsHolder {
     @Comment({"Cuboid region size in blocks.", "Even if you change this, existing orbs will keep their size."})
     public static final Property<Integer> INTERNAL_REGION_SIZE = new IntegerProperty("internal-region-size", 10);
 
+    public static final Property<Integer> PLANT_DELAY = new IntegerProperty("default-plant-interval", 10 * 20);
+
     @Override
     public void registerComments(CommentsConfiguration conf) {
         conf.setComment("", "HandyOrbs by andrei1058", "Discord: https://discord.gg/XdJfN2X", "", "Wheat orb customisation.");
@@ -79,7 +81,7 @@ public class WheatOrbConfig implements SettingsHolder {
      *
      * @param id id, if a orb was de-spawned.
      */
-    public static ItemStack getGiveItem(@Nullable String id){
+    public static ItemStack getGiveItem(@Nullable String id) {
         ItemStack orbItem = getCachedItemStack();
         if (id != null) {
             orbItem = HandyOrbsCore.getInstance().getItemStackSupport().addTag(orbItem, HandyOrbsPlugin.ORB_ID_TAG, id);

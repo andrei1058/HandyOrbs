@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.Ownable;
+import com.andrei1058.handyorbs.core.model.TimedOrb;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -42,6 +43,8 @@ public class OrbEntity {
     // wg;regionName (orb needs to be in that region)
     @DatabaseField(useGetSet = true)
     private String region;
+    @DatabaseField(useGetSet = true)
+    private int activityDelay;
 
     public OrbEntity() {
         // ORM Constructor
@@ -70,6 +73,10 @@ public class OrbEntity {
 
         this.chunkX = orbBase.getOrbEntity().getChunkX();
         this.chunkZ = orbBase.getOrbEntity().getChunkZ();
+
+        if (orbBase instanceof TimedOrb){
+            this.setActivityDelay(((TimedOrb) orbBase).getActivityDelay());
+        }
     }
 
     public int getOrbId() {
@@ -176,5 +183,13 @@ public class OrbEntity {
 
     public void setRegion(String region) {
         this.region = region;
+    }
+
+    public int getActivityDelay() {
+        return this.activityDelay;
+    }
+
+    public void setActivityDelay(int activityDelay) {
+        this.activityDelay = activityDelay;
     }
 }

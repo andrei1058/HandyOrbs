@@ -7,6 +7,7 @@ import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
 import com.andrei1058.handyorbs.core.model.Farmable;
 import com.andrei1058.handyorbs.core.model.Ownable;
+import com.andrei1058.handyorbs.core.model.TimedOrb;
 import com.andrei1058.handyorbs.database.model.OrbEntity;
 import com.andrei1058.handyorbs.database.repository.OrbRepository;
 import com.andrei1058.handyorbs.registry.OrbCategoryRegistry;
@@ -98,69 +99,7 @@ public class OrbListener implements Listener {
 
         if (HandyOrbsCore.getInstance().getItemStackSupport().hasTag(event.getItem(), HandyOrbsPlugin.ORB_CHECKER_TAG)) {
             event.setCancelled(true);
-            // todo, spawn by id, replace owner if needed, handle region and disabled categories
-            final Block clickedBlock = event.getClickedBlock();
-            final ItemStack item = event.getItem();
-            final Player player = event.getPlayer();
-            String id = HandyOrbsCore.getInstance().getItemStackSupport().getTag(item, HandyOrbsPlugin.ORB_ID_TAG);
-            String type = HandyOrbsCore.getInstance().getItemStackSupport().getTag(item, HandyOrbsPlugin.ORB_TYPE_TAG);
-            String category = HandyOrbsCore.getInstance().getItemStackSupport().getTag(item, HandyOrbsPlugin.ORB_CATEGORY_TAG);
-
-            // take item
-            HandyOrbsCore.getInstance().getItemStackSupport().minusAmount(player, item, 1);
-
-            Bukkit.getScheduler().runTask(HandyOrbsPlugin.getInstance(), () -> {
-                final OrbCategory orbCat = OrbCategory.valueOf(category);
-                OrbBase orb = OrbRegistry.getInstance().spawnOrb(type, orbCat, clickedBlock.getLocation().clone().add(0, 2, 0),
-                        "internal;cuboid;"+WheatOrbConfig.getConfig().getProperty(WheatOrbConfig.INTERNAL_REGION_SIZE), 10 * 20);
-                if (orb != null) {
-                    if (orb instanceof Ownable) {
-                        // will replace existing owner with the current placer
-                        ((Ownable) orb).setOwner(player.getUniqueId());
-                    }
-                    if (id != null && !id.isEmpty()) {
-                        orb.setOrbId(Integer.parseInt(id));
-
-
-                        Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
-                            OrbEntity model = OrbRepository.getInstance().getOrbById(Integer.parseInt(id));
-                            if (model != null) {
-                                Bukkit.getScheduler().runTask(HandyOrbsPlugin.getInstance(), ()-> {
-                                    orb.getOrbEntity().setDisplayName(model.getDisplayName());
-                                    orb.getOrbEntity().setCustomNameVisible(model.isNameStatus());
-                                    //todo load more data from the model?
-
-                                    orb.getOrbEntity().setRightClickListener(OrbRightClickHandler.getInstance().getDefaultRightClickListener(orb));
-                                    orb.getOrbEntity().setIcon(WheatOrbConfig.getCachedItemStack());
-                                    Bukkit.getScheduler().runTaskLaterAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
-                                        OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
-                                        OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCat);
-                                        registry.addActiveOrb(orb.getOrbId(), orb);
-                                    }, 1L);
-                                });
-                            }
-                        });
-                    } else {
-                        Bukkit.getScheduler().runTaskLater(HandyOrbsPlugin.getInstance(), () -> {
-                            orb.getOrbEntity().setDisplayName(WheatOrbConfig.getConfig().getProperty(WheatOrbConfig.PLAYER_ORB_NAME)
-                                    .replace("{player}", player.getDisplayName()));
-                            orb.getOrbEntity().setRightClickListener(OrbRightClickHandler.getInstance().getDefaultRightClickListener(orb));
-                            orb.getOrbEntity().setIcon(WheatOrbConfig.getCachedItemStack());
-
-                            Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(), () -> {
-                                OrbEntity orbEntity = OrbRepository.getInstance().saveUpdate(orb, OrbCategory.FARMING);
-                                if (orbEntity != null){
-                                    Bukkit.getScheduler().runTask(HandyOrbsPlugin.getInstance(), ()-> {
-                                        orb.setOrbId(orbEntity.getOrbId());
-                                        OrbCategoryRegistry registry = OrbRegistry.getInstance().getCategoryRegistry(orbCat);
-                                        registry.addActiveOrb(orb.getOrbId(), orb);
-                                    });
-                                }
-                            });
-                        }, 1L);
-                    }
-                }
-            });
+            OrbRegistry.getInstance().handleOrbPlace(event);
         }
     }
 
@@ -194,15 +133,9 @@ public class OrbListener implements Listener {
     }
 
     private static boolean isHoe(Material material) {
-        switch (material.toString()) {
-            case "DIAMOND_HOE":
-            case "GOLDEN_HOE":
-            case "IRON_HOE":
-            case "NETHERITE_HOE":
-            case "WOODEN_HOE":
-            case "STONE_HOE":
-                return true;
-        }
-        return false;
+        return switch (material.toString()) {
+            case "DIAMOND_HOE", "GOLDEN_HOE", "IRON_HOE", "NETHERITE_HOE", "WOODEN_HOE", "STONE_HOE" -> true;
+            default -> false;
+        };
     }
 }
