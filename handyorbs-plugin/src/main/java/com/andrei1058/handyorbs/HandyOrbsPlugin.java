@@ -15,6 +15,8 @@ import com.andrei1058.handyorbs.language.LanguageManager;
 import com.andrei1058.handyorbs.listener.ChunkListener;
 import com.andrei1058.handyorbs.listener.OrbListener;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.ServicePriority;
@@ -94,10 +96,9 @@ public class HandyOrbsPlugin extends JavaPlugin implements HandyOrbs {
         // Calling this will initialize orb icon
         WheatOrbConfig.getCachedItemStack();
 
-        //todo
-//        Metrics metrics = new Metrics(this, 11535);
-//        metrics.addCustomChart(new SimplePie("default_language", () ->
-//                LanguageManager.getINSTANCE().getDefaultLocale().getIsoCode()));
+        Metrics metrics = new Metrics(this, 12157);
+        metrics.addCustomChart(new SimplePie("default_language", () ->
+                LanguageManager.getINSTANCE().getDefaultLocale().getIsoCode()));
 
         HookManager.onEnable(true, "hor_");
 

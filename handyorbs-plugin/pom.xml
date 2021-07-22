@@ -59,6 +59,10 @@
                             <pattern>net.wesjd.anvilgui</pattern>
                             <shadedPattern>com.andrei1058.handyorbs.libs.anvilgui</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>com.andrei1058.handyorbs.libs.bstats</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -109,6 +113,12 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>2.2.1</version>
+            <scope>compile</scope>
+        </dependency>
         <!-- Vault API -->
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
