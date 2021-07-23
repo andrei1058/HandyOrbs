@@ -105,6 +105,10 @@ public class OrbRegistry {
         if (defaultsProvider.getDefaultActivityDelay() < 1) {
             throw new IllegalArgumentException("defaultActivityDelay cannot be lower than 1 tick");
         }
+        // check if the identifier is in use
+        if (orbTypeRegistry.values().stream().anyMatch(reg -> reg.isRegistered(identifier))){
+            throw new IllegalStateException("Identifier already in use!");
+        }
         OrbCategoryRegistry subRegistry = getCategoryRegistry(category);
         return subRegistry != null && subRegistry.addOrb(identifier, orb, defaultsProvider);
     }
