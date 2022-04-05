@@ -11,7 +11,6 @@ import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.Main;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

@@ -124,9 +124,24 @@ public class OrbListener implements Listener {
     }
 
     private static boolean isHoe(Material material) {
-        return switch (material.toString()) {
-            case "DIAMOND_HOE", "GOLDEN_HOE", "IRON_HOE", "NETHERITE_HOE", "WOODEN_HOE", "STONE_HOE" -> true;
-            default -> false;
-        };
+        switch (material.toString()) {
+            case "DIAMOND_HOE":
+            case "GOLDEN_HOE":
+            case "IRON_HOE":
+            case "NETHERITE_HOE":
+            case "WOODEN_HOE":
+            case "STONE_HOE":
+                return true;
+            default:
+                return false;
+        }
     }
+
+// JAVA 16
+//    private static boolean isHoe(Material material) {
+//        return switch (material.toString()) {
+//            case "DIAMOND_HOE", "GOLDEN_HOE", "IRON_HOE", "NETHERITE_HOE", "WOODEN_HOE", "STONE_HOE" -> true;
+//            default -> false;
+//        };
+//    }
 }

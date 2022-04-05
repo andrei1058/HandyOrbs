@@ -3,9 +3,11 @@ package com.andrei1058.handyorbs.registry;
 import com.andrei1058.handyorbs.HandyOrbsPlugin;
 import com.andrei1058.handyorbs.api.OrbCategory;
 import com.andrei1058.handyorbs.api.OrbDefaultsProvider;
+import com.andrei1058.handyorbs.config.types.CarrotOrbConfig;
 import com.andrei1058.handyorbs.config.types.WheatOrbConfig;
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
+import com.andrei1058.handyorbs.core.model.CarrotOrb;
 import com.andrei1058.handyorbs.core.model.Ownable;
 import com.andrei1058.handyorbs.core.model.TimedOrb;
 import com.andrei1058.handyorbs.core.model.WheatOrb;
@@ -62,6 +64,29 @@ public class OrbRegistry {
                         @Override
                         public ItemStack getDefaultIcon() {
                             return WheatOrbConfig.getCachedItemStack();
+                        }
+                    });
+
+            farmingRegistry.addOrb("carrot", CarrotOrb.class,
+                    new OrbDefaultsProvider() {
+                        @Override
+                        public int getDefaultActivityDelay() {
+                            return CarrotOrbConfig.getConfig().getProperty(CarrotOrbConfig.PLANT_DELAY);
+                        }
+
+                        @Override
+                        public String getDefaultRegionString() {
+                            return "internal;cuboid;" + CarrotOrbConfig.getConfig().getProperty(CarrotOrbConfig.INTERNAL_REGION_SIZE);
+                        }
+
+                        @Override
+                        public String getDefaultDisplayName() {
+                            return CarrotOrbConfig.getConfig().getProperty(CarrotOrbConfig.PLAYER_ORB_NAME);
+                        }
+
+                        @Override
+                        public ItemStack getDefaultIcon() {
+                            return CarrotOrbConfig.getCachedItemStack();
                         }
                     });
         }

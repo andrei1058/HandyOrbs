@@ -6,6 +6,7 @@ import com.andrei1058.handyorbs.api.locale.Message;
 import com.andrei1058.handyorbs.config.MainConfig;
 import com.andrei1058.handyorbs.core.HandyOrbsCore;
 import com.andrei1058.handyorbs.core.OrbBase;
+import com.andrei1058.handyorbs.core.model.Ownable;
 import com.andrei1058.handyorbs.database.repository.OrbRepository;
 import com.andrei1058.handyorbs.language.LanguageManager;
 import org.bukkit.Bukkit;
@@ -26,6 +27,7 @@ public class SelfOrbGUI {
     private final OrbBase orbBase;
     private final int changeNameSlot = MainConfig.getConfig().getProperty(MainConfig.ORB_GUI_CHANGE_NAME_SLOT);
     private final int toggleNameSlot = MainConfig.getConfig().getProperty(MainConfig.ORB_GUI_TOGGLE_NAME_SLOT);
+    private final int makeSvOrbNameSlot = MainConfig.getConfig().getProperty(MainConfig.ORB_GUI_MAKE_SV_ORB_SLOT);
 
     public SelfOrbGUI(Player player, OrbBase orbBase) {
         this.viewer = player;
@@ -41,6 +43,9 @@ public class SelfOrbGUI {
         ItemStack toggleName = createItemStack(MainConfig.getConfig().getProperty(MainConfig.ORB_GUI_TOGGLE_NAME_MATERIAL),
                 locale.getMsg(getViewer(), Message.ORB_TOGGLE_TOGGLE_ITEM_NAME), locale.getMsgList(getViewer(), Message.ORB_TOGGLE_NAME_ITEM_LORE));
 
+        ItemStack makeOrbName = createItemStack(MainConfig.getConfig().getProperty(MainConfig.ORB_GUI_MAKE_SV_ORB_MATERIAL),
+                locale.getMsg(getViewer(), Message.ORB_MAKE_SV_ORB_ITEM_NAME), locale.getMsgList(getViewer(), Message.ORB_MAKE_SV_ORB_ITEM_LORE));
+
 
         if (changeNameSlot >= 0 && changeNameSlot < inventory.getSize()) {
             inventory.setItem(changeNameSlot, changeName);
@@ -49,6 +54,22 @@ public class SelfOrbGUI {
         if (toggleNameSlot >= 0 && toggleNameSlot < inventory.getSize()) {
             inventory.setItem(toggleNameSlot, toggleName);
         }
+
+        if (makeSvOrbNameSlot >= 0 && makeSvOrbNameSlot < inventory.getSize()) {
+            inventory.setItem(makeSvOrbNameSlot, makeOrbName);
+        }
+
+//        if (changeNameSlot == -1) {
+//            inventory.addItem(changeName);
+//        }
+//
+//        if (toggleNameSlot == -1) {
+//            inventory.addItem(toggleName);
+//        }
+
+//        if (makeSvOrbNameSlot == -1) {
+//            inventory.addItem(makeOrbName);
+//        }
     }
 
     public int getChangeNameSlot() {
@@ -87,6 +108,9 @@ public class SelfOrbGUI {
                 getViewer().closeInventory();
                 Bukkit.getScheduler().runTaskAsynchronously(HandyOrbsPlugin.getInstance(),
                         () -> OrbRepository.getInstance().updateOrbNameVisibility(orbBase));
+            } else if (slot == makeSvOrbNameSlot) {
+                //todo move into manager
+                ((Ownable)getOrbBase()).setOwner(null);
             }
         }
     }

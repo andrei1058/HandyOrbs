@@ -34,6 +34,7 @@ public abstract class GenericFarmOrb extends OrbBase implements Ownable, Farmabl
         this.cropMaterial = cropMaterial;
         this.groundMaterial = groundMaterial;
         this.activityDelay = delay;
+        this.instantGrowth = true;
         prepareSoil(location.getWorld(), region);
 
         getOrbEntity().setOrbActivity(() -> {

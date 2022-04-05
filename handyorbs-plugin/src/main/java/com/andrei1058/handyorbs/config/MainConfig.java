@@ -33,6 +33,11 @@ public class MainConfig implements SettingsHolder {
     public static final StringProperty ORB_GUI_TOGGLE_NAME_MATERIAL = new StringProperty("self-orb-gui.toggle-name-visibility-material", Material.SOUL_LANTERN.toString());
     @Comment({"The slot number where to put the item in the inventory."})
     public static final IntegerProperty ORB_GUI_TOGGLE_NAME_SLOT = new IntegerProperty("self-orb-gui.toggle-name-visibility-slot", 1);
+    @Comment({"The display item on which you click transform a orb in server orb."})
+    public static final StringProperty ORB_GUI_MAKE_SV_ORB_MATERIAL = new StringProperty("self-orb-gui.make-sv-orb-material", Material.REDSTONE.toString());
+    @Comment({"The slot number where to put the item in the inventory."})
+    public static final IntegerProperty ORB_GUI_MAKE_SV_ORB_SLOT = new IntegerProperty("self-orb-gui.make-sv-orb-slot", 3);
+
     @Comment({"Orb name char limit"})
     public static final IntegerProperty ORB_NAME_CHAR_LIMIT = new IntegerProperty("orb-name-char-limit", 20);
 

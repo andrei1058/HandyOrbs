@@ -10,7 +10,7 @@ import java.util.List;
 public interface Locale {
 
     /**
-     * Color color translated message and
+     * Color translated message and
      * placeholder replacements.
      *
      * @param path   message path.

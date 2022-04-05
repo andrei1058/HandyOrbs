@@ -17,6 +17,8 @@ public enum Message {
     ORB_RENAME_ITEM_LORE("orb-rename-item-lore", Collections.emptyList()),
     ORB_TOGGLE_TOGGLE_ITEM_NAME("orb-toggle-name-item-name", "&bToggle orb name visibility"),
     ORB_TOGGLE_NAME_ITEM_LORE("orb-toggle-name-item-lore", Collections.emptyList()),
+    ORB_MAKE_SV_ORB_ITEM_NAME("orb-make-sv-item-name", "&cMake server orb"),
+    ORB_MAKE_SV_ORB_ITEM_LORE("orb-make-sv-name-item-lore", Collections.emptyList()),
     ORB_SELF_GUI_NAME("orb-gui-name", "&7My {orbName}")
 
 

@@ -3,8 +3,6 @@ package com.andrei1058.handyorbs.core.version;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -48,8 +46,7 @@ public class OrbEntityFactory {
     /**
      * Spawn a orb entity.
      */
-    @Nullable
-    public OrbEntity spawnOrbEntity(@NotNull Location location, @NotNull ItemStack head) {
+    public OrbEntity spawnOrbEntity(Location location, ItemStack head) {
         return getWrappedFactory().spawnOrbEntity(location, head);
     }
 

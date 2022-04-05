@@ -214,6 +214,11 @@
             <artifactId>handyorbs-v1_16_R3</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.andrei1058.handyorbs</groupId>
+            <artifactId>handyorbs-v1_18_R2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Configuration API -->
         <dependency>
             <groupId>ch.jalu</groupId>
@@ -231,13 +236,13 @@
         <dependency>
             <groupId>com.j256.ormlite</groupId>
             <artifactId>ormlite-jdbc</artifactId>
-            <version>5.6</version>
+            <version>6.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.j256.ormlite</groupId>
             <artifactId>ormlite-core</artifactId>
-            <version>5.6</version>
+            <version>6.1</version>
             <scope>compile</scope>
         </dependency>
         <!-- Command Lib -->

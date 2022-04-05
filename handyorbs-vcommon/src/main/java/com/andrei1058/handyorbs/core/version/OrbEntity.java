@@ -2,7 +2,6 @@ package com.andrei1058.handyorbs.core.version;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -52,7 +51,7 @@ public interface OrbEntity {
     /**
      * Set right click listener.
      */
-    void setRightClickListener(@Nullable Function<Player, Void> rightClickListener);
+    void setRightClickListener(Function<Player, Void> rightClickListener);
 
     boolean getCustomNameVisible();
 
