@@ -12,6 +12,8 @@
     <artifactId>handyorbs-plugin</artifactId>
 
     <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -116,7 +118,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>2.2.1</version>
+            <version>3.0.0</version>
             <scope>compile</scope>
         </dependency>
         <!-- Vault API -->
@@ -219,11 +221,16 @@
             <artifactId>handyorbs-v1_18_R2</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.andrei1058.handyorbs</groupId>
+            <artifactId>handyorbs-v1_19_R1</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Configuration API -->
         <dependency>
             <groupId>ch.jalu</groupId>
             <artifactId>configme</artifactId>
-            <version>1.3.0-SNAPSHOT</version>
+            <version>1.3.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
