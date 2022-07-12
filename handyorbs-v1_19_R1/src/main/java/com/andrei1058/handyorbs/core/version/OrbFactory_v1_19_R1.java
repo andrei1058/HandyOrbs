@@ -14,6 +14,7 @@ import net.minecraft.world.entity.decoration.EntityArmorStand;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.Vec3D;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
@@ -88,11 +89,6 @@ public class OrbFactory_v1_19_R1 implements WrappedFactory {
         public void inactiveTick() {
         }
 
-        @SuppressWarnings("unused")
-        public void baseTick() {
-
-        }
-
         @Override
         protected boolean damageEntity0(DamageSource damagesource, float f) {
             return false;
@@ -149,27 +145,27 @@ public class OrbFactory_v1_19_R1 implements WrappedFactory {
 
         @Override
         public double getLocY() {
-            return super.ai.u();
+            return super.db().v();
         }
 
         @Override
         public double getLocX() {
-            return super.ai.v();
+            return super.db().u();
         }
 
         @Override
         public double getLocZ() {
-            return super.ai.w();
+            return super.db().w();
         }
 
         @Override
         public int getChunkX() {
-            return super.dd().b();
+            return super.dd().f();
         }
 
         @Override
         public int getChunkZ() {
-            return super.dd().c();
+            return super.dd().g();
         }
 
         @Override

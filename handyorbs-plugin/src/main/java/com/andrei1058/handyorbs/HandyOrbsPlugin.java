@@ -16,6 +16,8 @@ import com.andrei1058.handyorbs.language.LanguageManager;
 import com.andrei1058.handyorbs.listener.ChunkListener;
 import com.andrei1058.handyorbs.listener.OrbListener;
 import com.andrei1058.handyorbs.registry.OrbRegistry;
+import com.andrei1058.spigot.commandlib.CommandLib;
+import com.andrei1058.spigot.versionsupport.ChatSupport;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
@@ -105,6 +107,8 @@ public class HandyOrbsPlugin extends JavaPlugin implements HandyOrbs {
 
         // register API provider
         Bukkit.getServicesManager().register(HandyOrbs.class, getInstance(), this, ServicePriority.Normal);
+
+        CommandLib.init(ChatSupport.SupportBuilder.load());
     }
 
     public static HandyOrbsPlugin getInstance() {

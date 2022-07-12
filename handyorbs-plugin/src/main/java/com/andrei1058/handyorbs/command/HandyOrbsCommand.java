@@ -46,6 +46,11 @@ public class HandyOrbsCommand extends FastRootCommand {
             setPermissions(new String[]{"handyorbs.get"});
             withExecutor((commandSender, strings) -> {
 
+                if (strings.length == 0){
+                    //todo send usage
+                    return;
+                }
+
                 if (commandSender instanceof Player player){
                     if (OrbRegistry.getInstance().getOrbTypes().contains(strings[0].toLowerCase())){
                         player.getInventory().addItem(OrbRegistry.getInstance().getOrbItem(strings[0], player));

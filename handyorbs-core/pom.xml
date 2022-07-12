@@ -63,25 +63,25 @@
         <dependency>
             <groupId>com.andrei1058.spigot.versionsupport</groupId>
             <artifactId>material-version</artifactId>
-            <version>1.5.4-SNAPSHOT</version>
+            <version>1.6.4-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.versionsupport</groupId>
             <artifactId>block-version</artifactId>
-            <version>1.5.4-SNAPSHOT</version>
+            <version>1.6.4-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.versionsupport</groupId>
             <artifactId>particle-version</artifactId>
-            <version>1.5.4-SNAPSHOT</version>
+            <version>1.6.4-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.spigot.versionsupport</groupId>
             <artifactId>itemstack-version</artifactId>
-            <version>1.5.4-SNAPSHOT</version>
+            <version>1.6.4-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
