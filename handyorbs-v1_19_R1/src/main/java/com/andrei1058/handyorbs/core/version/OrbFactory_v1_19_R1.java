@@ -160,12 +160,12 @@ public class OrbFactory_v1_19_R1 implements WrappedFactory {
 
         @Override
         public int getChunkX() {
-            return super.dd().f();
+            return super.getBukkitEntity().getLocation().getChunk().getX();
         }
 
         @Override
         public int getChunkZ() {
-            return super.dd().g();
+            return  super.getBukkitEntity().getLocation().getChunk().getZ();
         }
 
         @Override
