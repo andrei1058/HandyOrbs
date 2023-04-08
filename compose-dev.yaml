@@ -1,0 +1,9 @@
+services:
+  maven:
+    volumes:
+      - type: bind
+        read_only: false
+        source: .
+        target: /home/mc
+    build:
+      dockerfile: dev.dockerfile
