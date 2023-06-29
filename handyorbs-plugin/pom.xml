@@ -226,6 +226,11 @@
             <artifactId>handyorbs-v1_19_R1</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.andrei1058.handyorbs</groupId>
+            <artifactId>handyorbs-v1_20_R1</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Configuration API -->
         <dependency>
             <groupId>ch.jalu</groupId>

@@ -16,6 +16,7 @@
         <module>handyorbs-v1_16_R3</module>
         <module>handyorbs-v1_18_R2</module>
         <module>handyorbs-v1_19_R1</module>
+        <module>handyorbs-v1_20_R1</module>
     </modules>
 
     <properties>

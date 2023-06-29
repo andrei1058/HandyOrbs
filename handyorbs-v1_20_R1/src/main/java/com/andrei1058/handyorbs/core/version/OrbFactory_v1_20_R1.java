@@ -15,9 +15,9 @@ import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.level.World;
 import net.minecraft.world.phys.Vec3D;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +31,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
-public class OrbFactory_v1_19_R1 implements WrappedFactory {
+public class OrbFactory_v1_20_R1 implements WrappedFactory {
     @Override
     @Nullable
     public OrbEntity spawnOrbEntity(@NotNull Location location, @NotNull ItemStack head) {
@@ -54,7 +54,7 @@ public class OrbFactory_v1_19_R1 implements WrappedFactory {
             // set invisible
             j(true);
             // set small
-            a(true);
+            t(true);
             // set base-plate
             s(false);
             // set silent
@@ -106,7 +106,7 @@ public class OrbFactory_v1_19_R1 implements WrappedFactory {
         }
 
         @Override
-        public void k() {
+        public void l() {
             tickAnimation();
             activity.doTick();
 
@@ -134,7 +134,7 @@ public class OrbFactory_v1_19_R1 implements WrappedFactory {
             equipment.add(new Pair<>(EnumItemSlot.f, this.c(EnumItemSlot.f)));
             PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(this.at(), equipment);
             this.getBukkitEntity().getWorld().getPlayers().forEach(
-                    player -> ((CraftPlayer)player).getHandle().b.a(packet)
+                    player -> ((CraftPlayer)player).getHandle().c.a(packet)
             );
         }
 
@@ -146,22 +146,24 @@ public class OrbFactory_v1_19_R1 implements WrappedFactory {
 
         @Override
         public void destroy() {
-            super.a(DamageSource.a().sweep());
+            // n stands for out of world
+            // sweep tells the server thi entity is to be removed
+            super.c(super.dJ().n().sweep());
         }
 
         @Override
         public double getLocY() {
-            return super.db().v();
+            return super.dg().b();
         }
 
         @Override
         public double getLocX() {
-            return super.db().u();
+            return super.dg().a();
         }
 
         @Override
         public double getLocZ() {
-            return super.db().w();
+            return super.dg().c();
         }
 
         @Override
@@ -187,7 +189,7 @@ public class OrbFactory_v1_19_R1 implements WrappedFactory {
 
         @Override
         public boolean getCustomNameVisible() {
-            return cu();
+            return super.cy();
         }
 
         @Override
@@ -223,22 +225,47 @@ public class OrbFactory_v1_19_R1 implements WrappedFactory {
         }
 
         @Contract(pure = true)
-        protected @Nullable SoundEffect aG() {
+        protected @Nullable SoundEffect aJ() {
             return null;
         }
 
         @Contract(pure = true)
-        protected @Nullable SoundEffect aH() {
+        protected @Nullable SoundEffect aK() {
             return null;
         }
 
         @Override
-        protected @javax.annotation.Nullable SoundEffect x_() {
+        protected @javax.annotation.Nullable SoundEffect aL() {
             return null;
         }
 
+        @Contract(pure = true)
         @Override
-        protected @javax.annotation.Nullable SoundEffect c(DamageSource damagesource) {
+        public @Nullable SoundEffect getSwimSound0() {
+            return null;
+        }
+
+        @Contract(pure = true)
+        @Override
+        public @Nullable SoundEffect getSwimSplashSound0() {
+            return null;
+        }
+
+        @Contract(pure = true)
+        @Override
+        public @Nullable SoundEffect getSwimHighSpeedSplashSound0() {
+            return null;
+        }
+
+        @Contract(pure = true)
+        @Override
+        public @Nullable SoundEffect getHurtSound0(DamageSource damagesource) {
+            return null;
+        }
+
+        @Contract(pure = true)
+        @Override
+        public @Nullable SoundEffect getDeathSound0() {
             return null;
         }
 
